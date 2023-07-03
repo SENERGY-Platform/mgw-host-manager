@@ -25,7 +25,8 @@ const (
 )
 
 const (
-	HostInfoPath = "host_info"
+	HostInfoPath  = "host_info"
+	ResourcesPath = "resources"
 )
 
 const (
