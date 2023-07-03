@@ -66,7 +66,7 @@ func (h *Handler) Get(ctx context.Context, rID string) (model.Resource, error) {
 	}
 	meta, ok := res[id]
 	if !ok {
-		return model.Resource{}, model.NewInvalidInputError(fmt.Errorf("resource '%s' not found", rID))
+		return model.Resource{}, model.NewNotFoundError(fmt.Errorf("resource '%s' not found", rID))
 	}
 	return model.Resource{
 		ID:           rID,
