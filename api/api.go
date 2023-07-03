@@ -32,6 +32,12 @@ func New(hostInfoHandler handler.HostInfoHandler) *Api {
 	}
 }
 
-func New() *Api {
-	return &Api{}
+func (a *Api) GetHostInfo(ctx context.Context) (model.HostInfo, error) {
+	netInfo, err := a.hostInfoHdl.GetNet(ctx)
+	if err != nil {
+		return model.HostInfo{}, err
+	}
+	return model.HostInfo{
+		Network: netInfo,
+	}, nil
 }
