@@ -30,9 +30,10 @@ type SocketConfig struct {
 }
 
 type Config struct {
-	ServerPort uint                  `json:"server_port" env_var:"SERVER_PORT"`
-	Logger     srv_base.LoggerConfig `json:"logger" env_var:"LOGGER_CONFIG"`
-	Socket     SocketConfig          `json:"socket" env_var:"SOCKET_CONFIG"`
+	ServerPort      uint                  `json:"server_port" env_var:"SERVER_PORT"`
+	Logger          srv_base.LoggerConfig `json:"logger" env_var:"LOGGER_CONFIG"`
+	Socket          SocketConfig          `json:"socket" env_var:"SOCKET_CONFIG"`
+	NetItfBlacklist []string              `json:"net_itf_blacklist" env_var:"NET_ITF_BLACKLIST"`
 }
 
 func NewConfig(path string) (*Config, error) {
