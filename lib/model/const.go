@@ -23,3 +23,7 @@ const (
 	HeaderApiVer    = "X-Api-Version"
 	HeaderSrvName   = "X-Service"
 )
+
+const (
+	HostInfoPath = "host_info"
+)
