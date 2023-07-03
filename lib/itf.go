@@ -16,5 +16,11 @@
 
 package lib
 
+import (
+	"context"
+	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+)
+
 type Api interface {
+	GetHostInfo(ctx context.Context) (model.HostInfo, error)
 }
