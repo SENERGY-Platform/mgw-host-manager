@@ -27,3 +27,8 @@ const (
 const (
 	HostInfoPath = "host_info"
 )
+
+const (
+	SerialDevice ResourceType = "serial"
+	Application  ResourceType = "app"
+)
