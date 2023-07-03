@@ -23,4 +23,6 @@ import (
 
 type Api interface {
 	GetHostInfo(ctx context.Context) (model.HostInfo, error)
+	GetResources(ctx context.Context, filter model.ResourceFilter) ([]model.Resource, error)
+	GetResource(ctx context.Context, rID string) (model.Resource, error)
 }
