@@ -28,6 +28,9 @@ import (
 	"mgw-host-manager/api"
 	"mgw-host-manager/handler/http_hdl"
 	"mgw-host-manager/handler/info_hdl"
+	"mgw-host-manager/handler/resource_hdl"
+	"mgw-host-manager/handler/resource_hdl/application_hdl"
+	"mgw-host-manager/handler/resource_hdl/serial_hdl"
 	"mgw-host-manager/util"
 	"net/http"
 	"os"
@@ -62,7 +65,27 @@ func main() {
 
 	hostInfoHdl := info_hdl.New(config.NetItfBlacklist)
 
-	mApi := api.New(hostInfoHdl)
+	resourceHandlers := make(map[model.ResourceType]resource_hdl.ResHandler)
+
+	resourceHandlers[model.SerialDevice] = serial_hdl.New(config.SerialDevicePath)
+
+	apps, err := application_hdl.LoadApps(config.ApplicationsPath)
+	if err != nil {
+		var pathErr *os.PathError
+		if !errors.As(err, &pathErr) {
+			util.Logger.Error(err)
+			return
+		}
+	} else {
+		if len(apps) > 0 {
+			resourceHandlers[model.Application] = application_hdl.New(apps)
+		}
+	}
+
+	resourceHdl := resource_hdl.New(resourceHandlers)
+	util.Logger.Debugf("resource handlers: %s", srv_base.ToJsonStr(resourceHdl.Handlers()))
+
+	mApi := api.New(hostInfoHdl, resourceHdl)
 
 	gin.SetMode(gin.ReleaseMode)
 	httpHandler := gin.New()

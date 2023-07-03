@@ -24,11 +24,13 @@ import (
 
 type Api struct {
 	hostInfoHdl handler.HostInfoHandler
+	resourceHdl handler.ResourceHandler
 }
 
-func New(hostInfoHandler handler.HostInfoHandler) *Api {
+func New(hostInfoHandler handler.HostInfoHandler, resourceHandler handler.ResourceHandler) *Api {
 	return &Api{
 		hostInfoHdl: hostInfoHandler,
+		resourceHdl: resourceHandler,
 	}
 }
 
