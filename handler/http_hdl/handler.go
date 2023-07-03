@@ -18,9 +18,15 @@ package http_hdl
 
 import (
 	"github.com/SENERGY-Platform/mgw-host-manager/lib"
+	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
+
+const resIdParam = "r"
+
+type resourcesQuery struct {
+}
 
 func getHostInfo(a lib.Api) gin.HandlerFunc {
 	return func(gc *gin.Context) {
@@ -30,5 +36,32 @@ func getHostInfo(a lib.Api) gin.HandlerFunc {
 			return
 		}
 		gc.JSON(http.StatusOK, hostInfo)
+	}
+}
+
+func getResources(a lib.Api) gin.HandlerFunc {
+	return func(gc *gin.Context) {
+		query := resourcesQuery{}
+		if err := gc.ShouldBindQuery(&query); err != nil {
+			_ = gc.Error(model.NewInvalidInputError(err))
+			return
+		}
+		resources, err := a.GetResources(gc.Request.Context(), model.ResourceFilter{})
+		if err != nil {
+			_ = gc.Error(err)
+			return
+		}
+		gc.JSON(http.StatusOK, resources)
+	}
+}
+
+func getResource(a lib.Api) gin.HandlerFunc {
+	return func(gc *gin.Context) {
+		resource, err := a.GetResource(gc.Request.Context(), gc.Param(resIdParam))
+		if err != nil {
+			_ = gc.Error(err)
+			return
+		}
+		gc.JSON(http.StatusOK, resource)
 	}
 }
