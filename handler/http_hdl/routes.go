@@ -18,12 +18,13 @@ package http_hdl
 
 import (
 	"github.com/SENERGY-Platform/mgw-host-manager/lib"
+	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"github.com/gin-gonic/gin"
 	"sort"
 )
 
 func SetRoutes(e *gin.Engine, a lib.Api) {
-
+	e.GET(model.HostInfoPath, getHostInfo(a))
 }
 
 func GetRoutes(e *gin.Engine) [][2]string {
