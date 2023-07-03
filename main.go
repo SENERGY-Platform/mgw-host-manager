@@ -27,6 +27,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"mgw-host-manager/api"
 	"mgw-host-manager/handler/http_hdl"
+	"mgw-host-manager/handler/info_hdl"
 	"mgw-host-manager/util"
 	"net/http"
 	"os"
@@ -59,7 +60,9 @@ func main() {
 
 	util.Logger.Debugf("config: %s", srv_base.ToJsonStr(config))
 
-	mApi := api.New()
+	hostInfoHdl := info_hdl.New(config.NetItfBlacklist)
+
+	mApi := api.New(hostInfoHdl)
 
 	gin.SetMode(gin.ReleaseMode)
 	httpHandler := gin.New()

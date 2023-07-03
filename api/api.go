@@ -16,7 +16,20 @@
 
 package api
 
+import (
+	"context"
+	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+	"mgw-host-manager/handler"
+)
+
 type Api struct {
+	hostInfoHdl handler.HostInfoHandler
+}
+
+func New(hostInfoHandler handler.HostInfoHandler) *Api {
+	return &Api{
+		hostInfoHdl: hostInfoHandler,
+	}
 }
 
 func New() *Api {
