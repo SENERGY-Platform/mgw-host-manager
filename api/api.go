@@ -43,3 +43,11 @@ func (a *Api) GetHostInfo(ctx context.Context) (model.HostInfo, error) {
 		Network: netInfo,
 	}, nil
 }
+
+func (a *Api) GetResources(ctx context.Context, filter model.ResourceFilter) ([]model.Resource, error) {
+	return a.resourceHdl.List(ctx, filter)
+}
+
+func (a *Api) GetResource(ctx context.Context, rID string) (model.Resource, error) {
+	return a.resourceHdl.Get(ctx, rID)
+}
