@@ -18,6 +18,7 @@ package serial_hdl
 
 import (
 	"context"
+	"errors"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"io/fs"
 	"mgw-host-manager/util"
@@ -38,6 +39,10 @@ func (h *Handler) Get(ctx context.Context) (map[string]model.ResourceMeta, error
 	dir := os.DirFS(h.path)
 	entries, err := fs.ReadDir(dir, ".")
 	if err != nil {
+		var pathErr *os.PathError
+		if errors.As(err, &pathErr) && pathErr.Op == "open" {
+			return nil, nil
+		}
 		return nil, model.NewInternalError(err)
 	}
 	resources := make(map[string]model.ResourceMeta)
