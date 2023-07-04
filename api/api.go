@@ -44,6 +44,14 @@ func (a *Api) GetHostInfo(ctx context.Context) (model.HostInfo, error) {
 	}, nil
 }
 
+func (a *Api) GetHostNet(ctx context.Context) (model.HostNet, error) {
+	netInfo, err := a.hostInfoHdl.GetNet(ctx)
+	if err != nil {
+		return model.HostNet{}, err
+	}
+	return netInfo, nil
+}
+
 func (a *Api) GetResources(ctx context.Context, filter model.ResourceFilter) ([]model.Resource, error) {
 	return a.resourceHdl.List(ctx, filter)
 }
