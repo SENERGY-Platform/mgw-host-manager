@@ -44,6 +44,7 @@ func (h *Handler) List(ctx context.Context, filter model.ResourceFilter) ([]mode
 		for id, base := range res {
 			resources = append(resources, model.Resource{
 				ID:           genID(t, id),
+				Type:         t,
 				ResourceBase: base,
 			})
 		}
@@ -70,6 +71,7 @@ func (h *Handler) Get(ctx context.Context, rID string) (model.Resource, error) {
 	}
 	return model.Resource{
 		ID:           rID,
+		Type:         t,
 		ResourceBase: base,
 	}, nil
 }

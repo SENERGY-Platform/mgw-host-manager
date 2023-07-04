@@ -19,7 +19,8 @@ package model
 type ResourceType = string
 
 type Resource struct {
-	ID string `json:"id"`
+	ID   string       `json:"id"`
+	Type ResourceType `json:"type"`
 	ResourceBase
 }
 
