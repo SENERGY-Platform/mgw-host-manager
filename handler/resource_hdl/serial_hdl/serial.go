@@ -20,8 +20,8 @@ import (
 	"context"
 	"errors"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+	"github.com/SENERGY-Platform/mgw-host-manager/util"
 	"io/fs"
-	"mgw-host-manager/util"
 	"os"
 )
 

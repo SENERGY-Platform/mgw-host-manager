@@ -1,4 +1,4 @@
-module mgw-host-manager
+module github.com/SENERGY-Platform/mgw-host-manager
 
 go 1.20
 

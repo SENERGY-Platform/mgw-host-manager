@@ -18,8 +18,8 @@ package api
 
 import (
 	"context"
+	"github.com/SENERGY-Platform/mgw-host-manager/handler"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
-	"mgw-host-manager/handler"
 )
 
 type Api struct {

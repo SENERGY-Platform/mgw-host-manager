@@ -20,7 +20,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
-	"mgw-host-manager/util"
+	"github.com/SENERGY-Platform/mgw-host-manager/util"
 	"os"
 )
 
