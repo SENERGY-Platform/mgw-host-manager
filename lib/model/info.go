@@ -17,7 +17,9 @@
 package model
 
 type HostInfo struct {
-	Network HostNet `json:"network"`
+	OS       any     `json:"os"`
+	Network  HostNet `json:"network"`
+	Hardware any     `json:"hardware"`
 }
 
 type HostNet struct {
