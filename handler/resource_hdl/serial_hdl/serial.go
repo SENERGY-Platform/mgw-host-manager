@@ -35,7 +35,7 @@ func New(path string) *Handler {
 	}
 }
 
-func (h *Handler) Get(ctx context.Context) (map[string]model.ResourceMeta, error) {
+func (h *Handler) Get(ctx context.Context) (map[string]model.ResourceBase, error) {
 	dir := os.DirFS(h.path)
 	entries, err := fs.ReadDir(dir, ".")
 	if err != nil {
@@ -45,13 +45,13 @@ func (h *Handler) Get(ctx context.Context) (map[string]model.ResourceMeta, error
 		}
 		return nil, model.NewInternalError(err)
 	}
-	resources := make(map[string]model.ResourceMeta)
+	resources := make(map[string]model.ResourceBase)
 	for _, entry := range entries {
 		if ctx.Err() != nil {
 			return nil, model.NewInternalError(ctx.Err())
 		}
 		if !entry.IsDir() {
-			resources[util.GenHash(entry.Name())] = model.ResourceMeta{
+			resources[util.GenHash(entry.Name())] = model.ResourceBase{
 				Name: entry.Name(),
 				Tags: nil,
 				Path: h.path + "/" + entry.Name(),

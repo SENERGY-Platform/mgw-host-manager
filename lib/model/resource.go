@@ -20,10 +20,10 @@ type ResourceType = string
 
 type Resource struct {
 	ID string `json:"id"`
-	ResourceMeta
+	ResourceBase
 }
 
-type ResourceMeta struct {
+type ResourceBase struct {
 	Name string   `json:"name"`
 	Tags []string `json:"tags"`
 	Path string   `json:"path"`

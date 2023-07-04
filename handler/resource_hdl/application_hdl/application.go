@@ -25,7 +25,7 @@ import (
 )
 
 type Handler struct {
-	resources map[string]model.ResourceMeta
+	resources map[string]model.ResourceBase
 }
 
 type Application struct {
@@ -34,9 +34,9 @@ type Application struct {
 }
 
 func New(applications []Application) *Handler {
-	resources := make(map[string]model.ResourceMeta)
+	resources := make(map[string]model.ResourceBase)
 	for _, app := range applications {
-		resources[util.GenHash(app.Socket)] = model.ResourceMeta{
+		resources[util.GenHash(app.Socket)] = model.ResourceBase{
 			Name: app.Name,
 			Tags: nil,
 			Path: app.Socket,
@@ -61,8 +61,8 @@ func LoadApps(path string) ([]Application, error) {
 	return d, nil
 }
 
-func (h *Handler) Get(ctx context.Context) (map[string]model.ResourceMeta, error) {
-	resources := make(map[string]model.ResourceMeta)
+func (h *Handler) Get(ctx context.Context) (map[string]model.ResourceBase, error) {
+	resources := make(map[string]model.ResourceBase)
 	for id, res := range h.resources {
 		if ctx.Err() != nil {
 			return nil, model.NewInternalError(ctx.Err())
