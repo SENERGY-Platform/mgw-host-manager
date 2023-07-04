@@ -39,6 +39,17 @@ func getHostInfo(a lib.Api) gin.HandlerFunc {
 	}
 }
 
+func getHostNet(a lib.Api) gin.HandlerFunc {
+	return func(gc *gin.Context) {
+		hostNet, err := a.GetHostNet(gc.Request.Context())
+		if err != nil {
+			_ = gc.Error(err)
+			return
+		}
+		gc.JSON(http.StatusOK, hostNet)
+	}
+}
+
 func getResources(a lib.Api) gin.HandlerFunc {
 	return func(gc *gin.Context) {
 		query := resourcesQuery{}
