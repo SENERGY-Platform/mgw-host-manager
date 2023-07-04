@@ -41,10 +41,10 @@ func (h *Handler) List(ctx context.Context, filter model.ResourceFilter) ([]mode
 		if err != nil {
 			return nil, err
 		}
-		for id, meta := range res {
+		for id, base := range res {
 			resources = append(resources, model.Resource{
 				ID:           genID(t, id),
-				ResourceBase: meta,
+				ResourceBase: base,
 			})
 		}
 	}
@@ -64,13 +64,13 @@ func (h *Handler) Get(ctx context.Context, rID string) (model.Resource, error) {
 	if err != nil {
 		return model.Resource{}, err
 	}
-	meta, ok := res[id]
+	base, ok := res[id]
 	if !ok {
 		return model.Resource{}, model.NewNotFoundError(fmt.Errorf("resource '%s' not found", rID))
 	}
 	return model.Resource{
 		ID:           rID,
-		ResourceBase: meta,
+		ResourceBase: base,
 	}, nil
 }
 
