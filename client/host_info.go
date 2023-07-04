@@ -39,3 +39,20 @@ func (c *Client) GetHostInfo(ctx context.Context) (model.HostInfo, error) {
 	}
 	return hostInfo, nil
 }
+
+func (c *Client) GetHostNet(ctx context.Context) (model.HostNet, error) {
+	u, err := url.JoinPath(c.baseUrl, model.HostInfoPath, model.HostNetPath)
+	if err != nil {
+		return model.HostNet{}, err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return model.HostNet{}, err
+	}
+	var hostNet model.HostNet
+	err = c.execRequestJSON(req, &hostNet)
+	if err != nil {
+		return model.HostNet{}, err
+	}
+	return hostNet, nil
+}
