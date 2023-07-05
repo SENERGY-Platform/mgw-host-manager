@@ -28,7 +28,7 @@ const resIdParam = "r"
 type resourcesQuery struct {
 }
 
-func getHostInfo(a lib.Api) gin.HandlerFunc {
+func getHostInfoH(a lib.Api) gin.HandlerFunc {
 	return func(gc *gin.Context) {
 		hostInfo, err := a.GetHostInfo(gc.Request.Context())
 		if err != nil {
@@ -39,7 +39,7 @@ func getHostInfo(a lib.Api) gin.HandlerFunc {
 	}
 }
 
-func getHostNet(a lib.Api) gin.HandlerFunc {
+func getHostNetH(a lib.Api) gin.HandlerFunc {
 	return func(gc *gin.Context) {
 		hostNet, err := a.GetHostNet(gc.Request.Context())
 		if err != nil {
@@ -50,7 +50,7 @@ func getHostNet(a lib.Api) gin.HandlerFunc {
 	}
 }
 
-func getResources(a lib.Api) gin.HandlerFunc {
+func getResourcesH(a lib.Api) gin.HandlerFunc {
 	return func(gc *gin.Context) {
 		query := resourcesQuery{}
 		if err := gc.ShouldBindQuery(&query); err != nil {
@@ -66,7 +66,7 @@ func getResources(a lib.Api) gin.HandlerFunc {
 	}
 }
 
-func getResource(a lib.Api) gin.HandlerFunc {
+func getResourceH(a lib.Api) gin.HandlerFunc {
 	return func(gc *gin.Context) {
 		resource, err := a.GetResource(gc.Request.Context(), gc.Param(resIdParam))
 		if err != nil {
