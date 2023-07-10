@@ -18,6 +18,8 @@ jobs:
         run: CGO_ENABLED=0 GOOS=linux go build -o manager -ldflags="-X 'main.version=${{ github.ref_name }}'" main.go
 #      - name: Test
 #        run: go test -v -race -covermode=atomic -coverprofile=coverage.out ./...
+      - name: Archive
+        run: tar -czvf mgw_host_manager_${{ github.ref_name }}.tar.gz manager LICENSE README.md
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
