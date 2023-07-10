@@ -18,8 +18,10 @@ jobs:
         run: CGO_ENABLED=0 GOOS=linux go build -o manager -ldflags="-X 'main.version=${{ github.ref_name }}'" main.go
 #      - name: Test
 #        run: go test -v -race -covermode=atomic -coverprofile=coverage.out ./...
-      - uses: actions/upload-artifact@v3
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: release_artifacts
-          path: manager
-
+          files: |
+            manager
+            LICENSE
+            README.md
