@@ -20,6 +20,6 @@ jobs:
 #        run: go test -v -race -covermode=atomic -coverprofile=coverage.out ./...
       - uses: actions/upload-artifact@v3
         with:
-          name: manager_artifact
+          name: manager_bin
           path: manager
 
