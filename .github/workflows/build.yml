@@ -23,7 +23,4 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            manager
-            LICENSE
-            README.md
+          files: mgw_host_manager_${{ github.ref_name }}.tar.gz
