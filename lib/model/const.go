@@ -25,7 +25,7 @@ const (
 )
 
 const (
-	HostInfoPath  = "host_info"
+	HostInfoPath  = "host-info"
 	HostNetPath   = "network"
 	HostOsPath    = "os"
 	HostHwPath    = "hardware"
