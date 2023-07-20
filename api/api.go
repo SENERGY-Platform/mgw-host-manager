@@ -62,8 +62,8 @@ func (a *Api) GetHostResource(ctx context.Context, rID string) (model.Resource, 
 	return a.resourceHdl.Get(ctx, rID)
 }
 
-func (a *Api) ListMDNSAdv(ctx context.Context) ([]model.ServiceGroup, error) {
-	return a.mDNSAdvHdl.List(ctx)
+func (a *Api) ListMDNSAdv(ctx context.Context, filter model.ServiceGroupFilter) ([]model.ServiceGroup, error) {
+	return a.mDNSAdvHdl.List(ctx, filter)
 }
 
 func (a *Api) AddMDNSAdv(ctx context.Context, serviceGroup model.ServiceGroup) error {
