@@ -23,9 +23,15 @@ import (
 	"net/http"
 )
 
-const resIdParam = "r"
+const (
+	hostResIdParam = "r"
+	mDNSAdvParam   = "a"
+)
 
-type resourcesQuery struct {
+type hostResourcesQuery struct {
+}
+
+type serviceGroupQuery struct {
 }
 
 func getHostInfoH(a lib.Api) gin.HandlerFunc {
@@ -50,9 +56,9 @@ func getHostNetH(a lib.Api) gin.HandlerFunc {
 	}
 }
 
-func getResourcesH(a lib.Api) gin.HandlerFunc {
+func getHostResourcesH(a lib.Api) gin.HandlerFunc {
 	return func(gc *gin.Context) {
-		query := resourcesQuery{}
+		query := hostResourcesQuery{}
 		if err := gc.ShouldBindQuery(&query); err != nil {
 			_ = gc.Error(model.NewInvalidInputError(err))
 			return
@@ -66,13 +72,86 @@ func getResourcesH(a lib.Api) gin.HandlerFunc {
 	}
 }
 
-func getResourceH(a lib.Api) gin.HandlerFunc {
+func getHostResourceH(a lib.Api) gin.HandlerFunc {
 	return func(gc *gin.Context) {
-		resource, err := a.GetHostResource(gc.Request.Context(), gc.Param(resIdParam))
+		resource, err := a.GetHostResource(gc.Request.Context(), gc.Param(hostResIdParam))
 		if err != nil {
 			_ = gc.Error(err)
 			return
 		}
 		gc.JSON(http.StatusOK, resource)
+	}
+}
+
+func getMDNSAdvListH(a lib.Api) gin.HandlerFunc {
+	return func(gc *gin.Context) {
+		query := serviceGroupQuery{}
+		if err := gc.ShouldBindQuery(&query); err != nil {
+			_ = gc.Error(model.NewInvalidInputError(err))
+			return
+		}
+		advList, err := a.ListMDNSAdv(gc.Request.Context(), model.ServiceGroupFilter{})
+		if err != nil {
+			_ = gc.Error(err)
+			return
+		}
+		gc.JSON(http.StatusOK, advList)
+	}
+}
+
+func getMDNSAdvH(a lib.Api) gin.HandlerFunc {
+	return func(gc *gin.Context) {
+		adv, err := a.GetMDNSAdv(gc.Request.Context(), gc.Param(mDNSAdvParam))
+		if err != nil {
+			_ = gc.Error(err)
+			return
+		}
+		gc.JSON(http.StatusOK, adv)
+	}
+}
+
+func putMDNSAdvAddH(a lib.Api) gin.HandlerFunc {
+	return func(gc *gin.Context) {
+		var sg model.ServiceGroup
+		err := gc.ShouldBindJSON(&sg)
+		if err != nil {
+			_ = gc.Error(model.NewInvalidInputError(err))
+			return
+		}
+		err = a.AddMDNSAdv(gc.Request.Context(), sg)
+		if err != nil {
+			_ = gc.Error(err)
+			return
+		}
+		gc.Status(http.StatusOK)
+	}
+}
+
+func putMDNSAdvUptH(a lib.Api) gin.HandlerFunc {
+	return func(gc *gin.Context) {
+		var sg model.ServiceGroup
+		err := gc.ShouldBindJSON(&sg)
+		if err != nil {
+			_ = gc.Error(model.NewInvalidInputError(err))
+			return
+		}
+		sg.ID = gc.Param(mDNSAdvParam)
+		err = a.UpdateMDNSAdv(gc.Request.Context(), sg)
+		if err != nil {
+			_ = gc.Error(err)
+			return
+		}
+		gc.Status(http.StatusOK)
+	}
+}
+
+func deleteMDNSAdvH(a lib.Api) gin.HandlerFunc {
+	return func(gc *gin.Context) {
+		err := a.DeleteMDNSAdv(gc.Request.Context(), gc.Param(mDNSAdvParam))
+		if err != nil {
+			_ = gc.Error(err)
+			return
+		}
+		gc.Status(http.StatusOK)
 	}
 }
