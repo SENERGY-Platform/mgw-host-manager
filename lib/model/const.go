@@ -25,11 +25,12 @@ const (
 )
 
 const (
-	HostInfoPath  = "host-info"
-	HostNetPath   = "network"
-	HostOsPath    = "os"
-	HostHwPath    = "hardware"
-	ResourcesPath = "resources"
+	HostInfoPath      = "host-info"
+	HostNetPath       = "network"
+	HostOsPath        = "os"
+	HostHwPath        = "hardware"
+	HostResourcesPath = "host-resources"
+	MDNSAdvPath       = "mdns-services"
 )
 
 const (
