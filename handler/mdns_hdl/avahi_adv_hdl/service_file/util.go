@@ -20,6 +20,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"os"
 	"regexp"
 	"strconv"
@@ -28,17 +29,17 @@ import (
 func NewServiceGroup(name string, nameReplaceWildcards bool, services []Service) (ServiceGroup, error) {
 	re, err := regexp.Compile(`^[a-zA-Z0-9\.\-_ #()\[\]!"\$%\?='\*\+:,\|@~]+$`)
 	if err != nil {
-		return ServiceGroup{}, err
+		return ServiceGroup{}, model.NewInternalError(err)
 	}
 	if !re.MatchString(name) {
-		return ServiceGroup{}, fmt.Errorf("invalid name format '%s'", name)
+		return ServiceGroup{}, model.NewInvalidInputError(fmt.Errorf("invalid name format '%s'", name))
 	}
 	replaceWildcards := "no"
 	if nameReplaceWildcards {
 		replaceWildcards = "yes"
 	}
 	if len(services) == 0 {
-		return ServiceGroup{}, errors.New("no services defined")
+		return ServiceGroup{}, model.NewInvalidInputError(errors.New("no services defined"))
 	}
 	return ServiceGroup{
 		Name: Name{
@@ -52,15 +53,15 @@ func NewServiceGroup(name string, nameReplaceWildcards bool, services []Service)
 func NewService(sType string, subTypes []Subtype, port uint, ipVer IPVer, domainName, hostName string, txtRecords []TxtRecord) (Service, error) {
 	re, err := regexp.Compile(`^(?:_[a-z0-9-]+\.)(?:_tcp|_udp)$`)
 	if err != nil {
-		return Service{}, err
+		return Service{}, model.NewInternalError(err)
 	}
 	if !re.MatchString(sType) {
-		return Service{}, fmt.Errorf("invalid type format '%s'", sType)
+		return Service{}, model.NewInvalidInputError(fmt.Errorf("invalid type format '%s'", sType))
 	}
 	proto := IPvAny
 	if ipVer != "" {
 		if !(ipVer == IPvAny || ipVer == IPv4 || ipVer == IPv6) {
-			return Service{}, fmt.Errorf("invalid ip version '%s'", ipVer)
+			return Service{}, model.NewInvalidInputError(fmt.Errorf("invalid ip version '%s'", ipVer))
 		}
 		proto = ipVer
 	}
@@ -78,10 +79,10 @@ func NewService(sType string, subTypes []Subtype, port uint, ipVer IPVer, domain
 func NewSubtype(sType string) (Subtype, error) {
 	re, err := regexp.Compile(`^(?:_[a-z0-9-]+\._sub\.)?(?:_[a-z0-9-]+\.)(?:_tcp|_udp)$`)
 	if err != nil {
-		return Subtype{}, err
+		return Subtype{}, model.NewInternalError(err)
 	}
 	if !re.MatchString(sType) {
-		return Subtype{}, fmt.Errorf("invalid subtype format '%s'", sType)
+		return Subtype{}, model.NewInvalidInputError(fmt.Errorf("invalid subtype format '%s'", sType))
 	}
 	return Subtype{Value: sType}, nil
 }
@@ -90,7 +91,7 @@ func NewTxtRecord(value string, valueFormat ValueFormat) (TxtRecord, error) {
 	valFormat := ValueFormatText
 	if valueFormat != "" {
 		if !(valueFormat == ValueFormatText || valueFormat == ValueFormatBinaryHex || valueFormat == ValueFormatBinaryBase64) {
-			return TxtRecord{}, fmt.Errorf("invalid value format '%s'", valueFormat)
+			return TxtRecord{}, model.NewInvalidInputError(fmt.Errorf("invalid value format '%s'", valueFormat))
 		}
 		valFormat = valueFormat
 	}
