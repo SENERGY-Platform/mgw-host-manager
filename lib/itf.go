@@ -24,8 +24,8 @@ import (
 type Api interface {
 	GetHostInfo(ctx context.Context) (model.HostInfo, error)
 	GetHostNet(ctx context.Context) (model.HostNet, error)
-	ListHostResources(ctx context.Context, filter model.ResourceFilter) ([]model.Resource, error)
-	GetHostResource(ctx context.Context, rID string) (model.Resource, error)
+	ListHostResources(ctx context.Context, filter model.HostResourceFilter) ([]model.HostResource, error)
+	GetHostResource(ctx context.Context, rID string) (model.HostResource, error)
 	ListMDNSAdv(ctx context.Context, filter model.ServiceGroupFilter) ([]model.ServiceGroup, error)
 	AddMDNSAdv(ctx context.Context, serviceGroup model.ServiceGroup) error
 	GetMDNSAdv(ctx context.Context, id string) (model.ServiceGroup, error)

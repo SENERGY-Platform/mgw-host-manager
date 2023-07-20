@@ -34,45 +34,45 @@ func New(handlers map[model.ResourceType]ResHandler) *Handler {
 	}
 }
 
-func (h *Handler) List(ctx context.Context, filter model.ResourceFilter) ([]model.Resource, error) {
-	var resources []model.Resource
+func (h *Handler) List(ctx context.Context, filter model.HostResourceFilter) ([]model.HostResource, error) {
+	var resources []model.HostResource
 	for t, handler := range h.handlers {
 		res, err := handler.Get(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for id, base := range res {
-			resources = append(resources, model.Resource{
-				ID:           genID(t, id),
-				Type:         t,
-				ResourceBase: base,
+			resources = append(resources, model.HostResource{
+				ID:               genID(t, id),
+				Type:             t,
+				HostResourceBase: base,
 			})
 		}
 	}
 	return resources, nil
 }
 
-func (h *Handler) Get(ctx context.Context, rID string) (model.Resource, error) {
+func (h *Handler) Get(ctx context.Context, rID string) (model.HostResource, error) {
 	t, id, err := parseID(rID)
 	if err != nil {
-		return model.Resource{}, model.NewInvalidInputError(err)
+		return model.HostResource{}, model.NewInvalidInputError(err)
 	}
 	handler, ok := h.handlers[t]
 	if !ok {
-		return model.Resource{}, model.NewInvalidInputError(fmt.Errorf("unknown resource type '%s'", t))
+		return model.HostResource{}, model.NewInvalidInputError(fmt.Errorf("unknown resource type '%s'", t))
 	}
 	res, err := handler.Get(ctx)
 	if err != nil {
-		return model.Resource{}, err
+		return model.HostResource{}, err
 	}
 	base, ok := res[id]
 	if !ok {
-		return model.Resource{}, model.NewNotFoundError(fmt.Errorf("resource '%s' not found", rID))
+		return model.HostResource{}, model.NewNotFoundError(fmt.Errorf("resource '%s' not found", rID))
 	}
-	return model.Resource{
-		ID:           rID,
-		Type:         t,
-		ResourceBase: base,
+	return model.HostResource{
+		ID:               rID,
+		Type:             t,
+		HostResourceBase: base,
 	}, nil
 }
 

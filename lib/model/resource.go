@@ -18,17 +18,17 @@ package model
 
 type ResourceType = string
 
-type Resource struct {
+type HostResource struct {
 	ID   string       `json:"id"`
 	Type ResourceType `json:"type"`
-	ResourceBase
+	HostResourceBase
 }
 
-type ResourceBase struct {
+type HostResourceBase struct {
 	Name string   `json:"name"`
 	Tags []string `json:"tags"`
 	Path string   `json:"path"`
 }
 
-type ResourceFilter struct {
+type HostResourceFilter struct {
 }

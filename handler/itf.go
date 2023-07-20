@@ -29,8 +29,8 @@ type HostInfoHandler interface {
 }
 
 type ResourceHandler interface {
-	List(ctx context.Context, filter model.ResourceFilter) ([]model.Resource, error)
-	Get(ctx context.Context, rID string) (model.Resource, error)
+	List(ctx context.Context, filter model.HostResourceFilter) ([]model.HostResource, error)
+	Get(ctx context.Context, rID string) (model.HostResource, error)
 }
 
 type MDNSAdvHandler interface {

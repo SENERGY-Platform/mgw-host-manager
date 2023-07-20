@@ -22,5 +22,5 @@ import (
 )
 
 type ResHandler interface {
-	Get(ctx context.Context) (map[string]model.ResourceBase, error)
+	Get(ctx context.Context) (map[string]model.HostResourceBase, error)
 }
