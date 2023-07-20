@@ -23,17 +23,17 @@ import (
 	"net/url"
 )
 
-func (c *Client) GetResources(ctx context.Context, filter model.ResourceFilter) ([]model.Resource, error) {
-	u, err := url.JoinPath(c.baseUrl, model.ResourcesPath)
+func (c *Client) ListHostResources(ctx context.Context, filter model.HostResourceFilter) ([]model.HostResource, error) {
+	u, err := url.JoinPath(c.baseUrl, model.HostResourcesPath)
 	if err != nil {
 		return nil, err
 	}
-	u += genGetResourcesQuery(filter)
+	u += genGetHostResourcesQuery(filter)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
 	if err != nil {
 		return nil, err
 	}
-	var resources []model.Resource
+	var resources []model.HostResource
 	err = c.execRequestJSON(req, &resources)
 	if err != nil {
 		return nil, err
@@ -41,23 +41,23 @@ func (c *Client) GetResources(ctx context.Context, filter model.ResourceFilter) 
 	return resources, nil
 }
 
-func (c *Client) GetResource(ctx context.Context, id string) (model.Resource, error) {
-	u, err := url.JoinPath(c.baseUrl, model.ResourcesPath, id)
+func (c *Client) GetHostResource(ctx context.Context, id string) (model.HostResource, error) {
+	u, err := url.JoinPath(c.baseUrl, model.HostResourcesPath, id)
 	if err != nil {
-		return model.Resource{}, err
+		return model.HostResource{}, err
 	}
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
 	if err != nil {
-		return model.Resource{}, err
+		return model.HostResource{}, err
 	}
-	var resource model.Resource
+	var resource model.HostResource
 	err = c.execRequestJSON(req, &resource)
 	if err != nil {
-		return model.Resource{}, err
+		return model.HostResource{}, err
 	}
 	return resource, nil
 }
 
-func genGetResourcesQuery(filter model.ResourceFilter) string {
+func genGetHostResourcesQuery(filter model.HostResourceFilter) string {
 	return ""
 }
