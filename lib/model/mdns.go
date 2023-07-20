@@ -37,3 +37,6 @@ type TxtRecord struct {
 	Format string `json:"format"`
 	Value  string `json:"value"`
 }
+
+type ServiceGroupFilter struct {
+}

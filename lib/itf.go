@@ -26,7 +26,7 @@ type Api interface {
 	GetHostNet(ctx context.Context) (model.HostNet, error)
 	ListHostResources(ctx context.Context, filter model.ResourceFilter) ([]model.Resource, error)
 	GetHostResource(ctx context.Context, rID string) (model.Resource, error)
-	ListMDNSAdv(ctx context.Context) ([]model.ServiceGroup, error)
+	ListMDNSAdv(ctx context.Context, filter model.ServiceGroupFilter) ([]model.ServiceGroup, error)
 	AddMDNSAdv(ctx context.Context, serviceGroup model.ServiceGroup) error
 	GetMDNSAdv(ctx context.Context, id string) (model.ServiceGroup, error)
 	UpdateMDNSAdv(ctx context.Context, serviceGroup model.ServiceGroup) error
