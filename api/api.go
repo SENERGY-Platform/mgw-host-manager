@@ -23,16 +23,16 @@ import (
 )
 
 type Api struct {
-	hostInfoHdl handler.HostInfoHandler
-	resourceHdl handler.ResourceHandler
-	mDNSAdvHdl  handler.MDNSAdvHandler
+	hostInfoHdl     handler.HostInfoHandler
+	hostResourceHdl handler.HostResourceHandler
+	mDNSAdvHdl      handler.MDNSAdvHandler
 }
 
-func New(hostInfoHandler handler.HostInfoHandler, resourceHandler handler.ResourceHandler, mDNSAdvHdl handler.MDNSAdvHandler) *Api {
+func New(hostInfoHandler handler.HostInfoHandler, hostResourceHandler handler.HostResourceHandler, mDNSAdvHdl handler.MDNSAdvHandler) *Api {
 	return &Api{
-		hostInfoHdl: hostInfoHandler,
-		resourceHdl: resourceHandler,
-		mDNSAdvHdl:  mDNSAdvHdl,
+		hostInfoHdl:     hostInfoHandler,
+		hostResourceHdl: hostResourceHandler,
+		mDNSAdvHdl:      mDNSAdvHdl,
 	}
 }
 
@@ -55,11 +55,11 @@ func (a *Api) GetHostNet(ctx context.Context) (model.HostNet, error) {
 }
 
 func (a *Api) ListHostResources(ctx context.Context, filter model.HostResourceFilter) ([]model.HostResource, error) {
-	return a.resourceHdl.List(ctx, filter)
+	return a.hostResourceHdl.List(ctx, filter)
 }
 
 func (a *Api) GetHostResource(ctx context.Context, rID string) (model.HostResource, error) {
-	return a.resourceHdl.Get(ctx, rID)
+	return a.hostResourceHdl.Get(ctx, rID)
 }
 
 func (a *Api) ListMDNSAdv(ctx context.Context, filter model.ServiceGroupFilter) ([]model.ServiceGroup, error) {

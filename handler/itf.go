@@ -28,7 +28,7 @@ type HostInfoHandler interface {
 	GetOS(ctx context.Context) error
 }
 
-type ResourceHandler interface {
+type HostResourceHandler interface {
 	List(ctx context.Context, filter model.HostResourceFilter) ([]model.HostResource, error)
 	Get(ctx context.Context, rID string) (model.HostResource, error)
 }

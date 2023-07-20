@@ -83,8 +83,8 @@ func main() {
 		}
 	}
 
-	resourceHdl := resource_hdl.New(resourceHandlers)
-	util.Logger.Debugf("resource handlers: %s", srv_base.ToJsonStr(resourceHdl.Handlers()))
+	hostResourceHdl := resource_hdl.New(resourceHandlers)
+	util.Logger.Debugf("resource handlers: %s", srv_base.ToJsonStr(hostResourceHdl.Handlers()))
 
 	mDNSAdvHdl := avahi_adv_hdl.New(config.AvahiServicesPath)
 	err = mDNSAdvHdl.Init()
@@ -93,7 +93,7 @@ func main() {
 		return
 	}
 
-	mApi := api.New(hostInfoHdl, resourceHdl, mDNSAdvHdl)
+	mApi := api.New(hostInfoHdl, hostResourceHdl, mDNSAdvHdl)
 
 	gin.SetMode(gin.ReleaseMode)
 	httpHandler := gin.New()
