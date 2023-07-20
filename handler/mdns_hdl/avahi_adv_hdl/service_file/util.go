@@ -26,6 +26,13 @@ import (
 )
 
 func NewServiceGroup(name string, nameReplaceWildcards bool, services []Service) (ServiceGroup, error) {
+	re, err := regexp.Compile(`^[a-zA-Z0-9\.\-_ #()\[\]!"\$%\?='\*\+:,\|@~]+$`)
+	if err != nil {
+		return ServiceGroup{}, err
+	}
+	if !re.MatchString(name) {
+		return ServiceGroup{}, fmt.Errorf("invalid name format '%s'", name)
+	}
 	replaceWildcards := "no"
 	if nameReplaceWildcards {
 		replaceWildcards = "yes"
