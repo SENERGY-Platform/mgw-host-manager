@@ -30,12 +30,13 @@ type SocketConfig struct {
 }
 
 type Config struct {
-	ServerPort       uint                  `json:"server_port" env_var:"SERVER_PORT"`
-	Logger           srv_base.LoggerConfig `json:"logger" env_var:"LOGGER_CONFIG"`
-	Socket           SocketConfig          `json:"socket" env_var:"SOCKET_CONFIG"`
-	NetItfBlacklist  []string              `json:"net_itf_blacklist" env_var:"NET_ITF_BLACKLIST"`
-	SerialDevicePath string                `json:"serial_device_path" env_var:"SERIAL_DEVICE_PATH"`
-	ApplicationsPath string                `json:"applications_path" env_var:"APPLICATIONS_PATH"`
+	ServerPort        uint                  `json:"server_port" env_var:"SERVER_PORT"`
+	Logger            srv_base.LoggerConfig `json:"logger" env_var:"LOGGER_CONFIG"`
+	Socket            SocketConfig          `json:"socket" env_var:"SOCKET_CONFIG"`
+	NetItfBlacklist   []string              `json:"net_itf_blacklist" env_var:"NET_ITF_BLACKLIST"`
+	SerialDevicePath  string                `json:"serial_device_path" env_var:"SERIAL_DEVICE_PATH"`
+	ApplicationsPath  string                `json:"applications_path" env_var:"APPLICATIONS_PATH"`
+	AvahiServicesPath string                `json:"avahi_services_path" env_var:"AVAHI_SERVICES_PATH"`
 }
 
 func NewConfig(path string) (*Config, error) {
@@ -51,8 +52,9 @@ func NewConfig(path string) (*Config, error) {
 			GroupID:  os.Getgid(),
 			FileMode: 0660,
 		},
-		SerialDevicePath: "/dev/serial/by-id",
-		ApplicationsPath: "include/applications.json",
+		SerialDevicePath:  "/dev/serial/by-id",
+		ApplicationsPath:  "include/applications.json",
+		AvahiServicesPath: "/etc/avahi/services",
 	}
 	err := srv_base.LoadConfig(path, &cfg, nil, nil, nil)
 	return &cfg, err
