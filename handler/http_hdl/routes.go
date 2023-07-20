@@ -26,8 +26,13 @@ import (
 func SetRoutes(e *gin.Engine, a lib.Api) {
 	e.GET(model.HostInfoPath, getHostInfoH(a))
 	e.GET(model.HostInfoPath+"/"+model.HostNetPath, getHostNetH(a))
-	e.GET(model.HostResourcesPath, getResourcesH(a))
-	e.GET(model.HostResourcesPath+"/:"+resIdParam, getResourceH(a))
+	e.GET(model.HostResourcesPath, getHostResourcesH(a))
+	e.GET(model.HostResourcesPath+"/:"+hostResIdParam, getHostResourceH(a))
+	e.GET(model.MDNSAdvPath, getMDNSAdvListH(a))
+	e.PUT(model.MDNSAdvPath, putMDNSAdvAddH(a))
+	e.GET(model.MDNSAdvPath+"/:"+mDNSAdvParam, getMDNSAdvH(a))
+	e.PUT(model.MDNSAdvPath+"/:"+mDNSAdvParam, putMDNSAdvUptH(a))
+	e.DELETE(model.MDNSAdvPath+"/:"+mDNSAdvParam, deleteMDNSAdvH(a))
 }
 
 func GetRoutes(e *gin.Engine) [][2]string {
