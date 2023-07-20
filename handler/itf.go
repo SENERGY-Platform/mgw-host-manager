@@ -34,7 +34,7 @@ type ResourceHandler interface {
 }
 
 type MDNSAdvHandler interface {
-	List(ctx context.Context) ([]model.ServiceGroup, error)
+	List(ctx context.Context, filter model.ServiceGroupFilter) ([]model.ServiceGroup, error)
 	Add(ctx context.Context, sg model.ServiceGroup) error
 	Get(ctx context.Context, id string) (model.ServiceGroup, error)
 	Update(ctx context.Context, sg model.ServiceGroup) error

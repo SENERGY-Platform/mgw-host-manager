@@ -69,7 +69,7 @@ func (h *Handler) Init() error {
 	return nil
 }
 
-func (h *Handler) List(ctx context.Context) ([]model.ServiceGroup, error) {
+func (h *Handler) List(ctx context.Context, filter model.ServiceGroupFilter) ([]model.ServiceGroup, error) {
 	h.mu.RLock()
 	defer h.mu.RUnlock()
 	var serviceGroups []model.ServiceGroup
