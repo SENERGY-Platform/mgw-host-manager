@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package avahi_adv_hdl
+package model
 
 type ServiceGroup struct {
+	ID               string    `json:"id"`
 	Name             string    `json:"name"`
 	ReplaceWildcards bool      `json:"replace_wildcards"`
 	Services         []Service `json:"services"`
