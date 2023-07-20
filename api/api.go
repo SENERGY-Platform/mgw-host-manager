@@ -61,3 +61,23 @@ func (a *Api) ListHostResources(ctx context.Context, filter model.ResourceFilter
 func (a *Api) GetHostResource(ctx context.Context, rID string) (model.Resource, error) {
 	return a.resourceHdl.Get(ctx, rID)
 }
+
+func (a *Api) ListMDNSAdv(ctx context.Context) ([]model.ServiceGroup, error) {
+	return a.mDNSAdvHdl.List(ctx)
+}
+
+func (a *Api) AddMDNSAdv(ctx context.Context, serviceGroup model.ServiceGroup) error {
+	return a.mDNSAdvHdl.Add(ctx, serviceGroup)
+}
+
+func (a *Api) GetMDNSAdv(ctx context.Context, id string) (model.ServiceGroup, error) {
+	return a.mDNSAdvHdl.Get(ctx, id)
+}
+
+func (a *Api) UpdateMDNSAdv(ctx context.Context, serviceGroup model.ServiceGroup) error {
+	return a.mDNSAdvHdl.Update(ctx, serviceGroup)
+}
+
+func (a *Api) DeleteMDNSAdv(ctx context.Context, id string) error {
+	return a.mDNSAdvHdl.Delete(ctx, id)
+}
