@@ -57,7 +57,7 @@ func getResourcesH(a lib.Api) gin.HandlerFunc {
 			_ = gc.Error(model.NewInvalidInputError(err))
 			return
 		}
-		resources, err := a.GetResources(gc.Request.Context(), model.ResourceFilter{})
+		resources, err := a.ListHostResources(gc.Request.Context(), model.ResourceFilter{})
 		if err != nil {
 			_ = gc.Error(err)
 			return
@@ -68,7 +68,7 @@ func getResourcesH(a lib.Api) gin.HandlerFunc {
 
 func getResourceH(a lib.Api) gin.HandlerFunc {
 	return func(gc *gin.Context) {
-		resource, err := a.GetResource(gc.Request.Context(), gc.Param(resIdParam))
+		resource, err := a.GetHostResource(gc.Request.Context(), gc.Param(resIdParam))
 		if err != nil {
 			_ = gc.Error(err)
 			return

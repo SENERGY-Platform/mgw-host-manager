@@ -52,10 +52,10 @@ func (a *Api) GetHostNet(ctx context.Context) (model.HostNet, error) {
 	return netInfo, nil
 }
 
-func (a *Api) GetResources(ctx context.Context, filter model.ResourceFilter) ([]model.Resource, error) {
+func (a *Api) ListHostResources(ctx context.Context, filter model.ResourceFilter) ([]model.Resource, error) {
 	return a.resourceHdl.List(ctx, filter)
 }
 
-func (a *Api) GetResource(ctx context.Context, rID string) (model.Resource, error) {
+func (a *Api) GetHostResource(ctx context.Context, rID string) (model.Resource, error) {
 	return a.resourceHdl.Get(ctx, rID)
 }
