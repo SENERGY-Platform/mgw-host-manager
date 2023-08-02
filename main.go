@@ -74,8 +74,7 @@ func main() {
 	if err != nil {
 		var pathErr *os.PathError
 		if !errors.As(err, &pathErr) {
-			util.Logger.Error(err)
-			return
+			util.Logger.Fatal(err)
 		}
 	} else {
 		if len(apps) > 0 {
@@ -89,8 +88,7 @@ func main() {
 	mDNSAdvHdl := avahi_adv_hdl.New(config.AvahiServicesPath)
 	err = mDNSAdvHdl.Init()
 	if err != nil {
-		util.Logger.Error(err)
-		return
+		util.Logger.Fatal(err)
 	}
 
 	mApi := api.New(hostInfoHdl, hostResourceHdl, mDNSAdvHdl)
@@ -111,8 +109,7 @@ func main() {
 
 	listener, err := srv_base.NewUnixListener(config.Socket.Path, os.Getuid(), config.Socket.GroupID, config.Socket.FileMode)
 	if err != nil {
-		util.Logger.Error(err)
-		return
+		util.Logger.Fatal(err)
 	}
 
 	srv_base.StartServer(&http.Server{Handler: httpHandler}, listener, srv_base_types.DefaultShutdownSignals, util.Logger)
