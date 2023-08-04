@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/SENERGY-Platform/gin-middleware v0.4.0
-	github.com/SENERGY-Platform/go-service-base v0.10.0
+	github.com/SENERGY-Platform/go-service-base v0.11.1
 	github.com/SENERGY-Platform/mgw-host-manager/lib v0.0.0-00010101000000-000000000000
 	github.com/gin-contrib/requestid v0.0.6
 	github.com/gin-gonic/gin v1.9.1
