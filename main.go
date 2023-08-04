@@ -40,6 +40,11 @@ import (
 var version string
 
 func main() {
+	ec := 0
+	defer func() {
+		os.Exit(ec)
+	}()
+
 	srv_base.PrintInfo(model.ServiceName, version)
 
 	util.ParseFlags()
@@ -47,7 +52,8 @@ func main() {
 	config, err := util.NewConfig(util.Flags.ConfPath)
 	if err != nil {
 		_, _ = fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		ec = 1
+		return
 	}
 
 	logFile, err := util.InitLogger(config.Logger)
@@ -55,7 +61,8 @@ func main() {
 		_, _ = fmt.Fprintln(os.Stderr, err)
 		var logFileError *srv_base.LogFileError
 		if errors.As(err, &logFileError) {
-			os.Exit(1)
+			ec = 1
+			return
 		}
 	}
 	if logFile != nil {
@@ -74,7 +81,9 @@ func main() {
 	if err != nil {
 		var pathErr *os.PathError
 		if !errors.As(err, &pathErr) {
-			util.Logger.Fatal(err)
+			util.Logger.Error(err)
+			ec = 1
+			return
 		}
 	} else {
 		if len(apps) > 0 {
@@ -88,7 +97,9 @@ func main() {
 	mDNSAdvHdl := avahi_adv_hdl.New(config.AvahiServicesPath)
 	err = mDNSAdvHdl.Init()
 	if err != nil {
-		util.Logger.Fatal(err)
+		util.Logger.Error(err)
+		ec = 1
+		return
 	}
 
 	mApi := api.New(hostInfoHdl, hostResourceHdl, mDNSAdvHdl)
@@ -109,7 +120,9 @@ func main() {
 
 	listener, err := srv_base.NewUnixListener(config.Socket.Path, os.Getuid(), config.Socket.GroupID, config.Socket.FileMode)
 	if err != nil {
-		util.Logger.Fatal(err)
+		util.Logger.Error(err)
+		ec = 1
+		return
 	}
 
 	srv_base.StartServer(&http.Server{Handler: httpHandler}, listener, srv_base_types.DefaultShutdownSignals, util.Logger)
