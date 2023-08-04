@@ -17,11 +17,11 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	gin_mw "github.com/SENERGY-Platform/gin-middleware"
 	"github.com/SENERGY-Platform/go-service-base/srv-base"
-	srv_base_types "github.com/SENERGY-Platform/go-service-base/srv-base/types"
 	"github.com/SENERGY-Platform/mgw-host-manager/api"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/http_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/info_hdl"
@@ -35,6 +35,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
+	"syscall"
+	"time"
 )
 
 var version string
@@ -70,6 +72,8 @@ func main() {
 	}
 
 	util.Logger.Debugf("config: %s", srv_base.ToJsonStr(config))
+
+	watchdog := srv_base.NewWatchdog(util.Logger, syscall.SIGINT, syscall.SIGTERM)
 
 	hostInfoHdl := info_hdl.New(config.NetItfBlacklist)
 
@@ -124,6 +128,38 @@ func main() {
 		ec = 1
 		return
 	}
+	server := &http.Server{Handler: httpHandler}
+	srvCtx, srvCF := context.WithCancel(context.Background())
+	watchdog.RegisterStopFunc(func() error {
+		if srvCtx.Err() == nil {
+			ctxWt, cf := context.WithTimeout(context.Background(), time.Second*5)
+			defer cf()
+			if err := server.Shutdown(ctxWt); err != nil {
+				return err
+			}
+			util.Logger.Info("http server shutdown complete")
+		}
+		return nil
+	})
+	watchdog.RegisterHealthFunc(func() bool {
+		if srvCtx.Err() == nil {
+			return true
+		}
+		util.Logger.Error("http server closed unexpectedly")
+		return false
+	})
 
-	srv_base.StartServer(&http.Server{Handler: httpHandler}, listener, srv_base_types.DefaultShutdownSignals, util.Logger)
+	watchdog.Start()
+
+	go func() {
+		defer srvCF()
+		util.Logger.Info("starting http server ...")
+		if err := server.Serve(listener); !errors.Is(err, http.ErrServerClosed) {
+			util.Logger.Error(err)
+			ec = 1
+			return
+		}
+	}()
+
+	ec = watchdog.Join()
 }
