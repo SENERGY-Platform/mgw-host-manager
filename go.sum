@@ -1,5 +1,5 @@
-github.com/SENERGY-Platform/gin-middleware v0.3.0 h1:NLqDQ5UiK6AWbcCvTDhd64gsI5dTjK4yL15DWiNQCJ4=
-github.com/SENERGY-Platform/gin-middleware v0.3.0/go.mod h1:BVE9k1GsvsXXnnLOBa5vfwklFXGCQTJE0CGDBAwy0TY=
+github.com/SENERGY-Platform/gin-middleware v0.4.0 h1:ImtPLpzAOu0M1sLXBCC9jJSq5JKHV10Eu50b2puFcXw=
+github.com/SENERGY-Platform/gin-middleware v0.4.0/go.mod h1:BVE9k1GsvsXXnnLOBa5vfwklFXGCQTJE0CGDBAwy0TY=
 github.com/SENERGY-Platform/go-service-base v0.8.0 h1:KUo+OugFxoy4X9b7IEm65O/56CWh9zQUedbZ9iO9hA8=
 github.com/SENERGY-Platform/go-service-base v0.8.0/go.mod h1:3ZD/Bo3uqhb3KzR70teqLEHyRCEXBJay9v9vzUpXqmI=
 github.com/bytedance/sonic v1.5.0/go.mod h1:ED5hyg4y6t3/9Ku1R6dU/4KyJ48DZ4jPhfY1O2AihPM=
