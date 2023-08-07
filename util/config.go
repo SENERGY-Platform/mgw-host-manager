@@ -44,8 +44,9 @@ func NewConfig(path string) (*Config, error) {
 		Logger: srv_base.LoggerConfig{
 			Level:        level.Warning,
 			Utc:          true,
+			Path:         "/var/log/",
+			FileName:     "mgw_host_manager",
 			Microseconds: true,
-			Terminal:     true,
 		},
 		Socket: SocketConfig{
 			Path:     "/opt/mgw/sockets/h_manager.sock",
