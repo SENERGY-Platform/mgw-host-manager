@@ -54,7 +54,7 @@ func NewConfig(path string) (*Config, error) {
 			FileMode: 0660,
 		},
 		SerialDevicePath:  "/dev/serial/by-id",
-		ApplicationsPath:  "include/applications.json",
+		ApplicationsPath:  "/opt/mgw/bin/host-manager/include/applications.json",
 		AvahiServicesPath: "/etc/avahi/services",
 	}
 	err := srv_base.LoadConfig(path, &cfg, nil, nil, nil)
