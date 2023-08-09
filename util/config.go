@@ -44,17 +44,17 @@ func NewConfig(path string) (*Config, error) {
 		Logger: srv_base.LoggerConfig{
 			Level:        level.Warning,
 			Utc:          true,
-			Path:         "/var/log/",
+			Path:         "./",
 			FileName:     "mgw_host_manager",
 			Microseconds: true,
 		},
 		Socket: SocketConfig{
-			Path:     "/opt/mgw/sockets/h_manager.sock",
+			Path:     "./h_manager.sock",
 			GroupID:  os.Getgid(),
 			FileMode: 0660,
 		},
 		SerialDevicePath:  "/dev/serial/by-id",
-		ApplicationsPath:  "/opt/mgw/bin/host-manager/include/applications.json",
+		ApplicationsPath:  "./applications.json",
 		AvahiServicesPath: "/etc/avahi/services",
 	}
 	err := srv_base.LoadConfig(path, &cfg, nil, nil, nil)
