@@ -26,14 +26,14 @@ import (
 type HmClient = lib.Api
 
 type Client struct {
-	*base_client.Client
-	baseUrl string
+	baseClient *base_client.Client
+	baseUrl    string
 }
 
 func New(httpClient base_client.HTTPClient, baseUrl string) *Client {
 	return &Client{
-		Client:  base_client.New(httpClient, customError, model.HeaderRequestID),
-		baseUrl: baseUrl,
+		baseClient: base_client.New(httpClient, customError, model.HeaderRequestID),
+		baseUrl:    baseUrl,
 	}
 }
 

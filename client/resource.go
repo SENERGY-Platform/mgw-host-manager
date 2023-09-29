@@ -34,7 +34,7 @@ func (c *Client) ListHostResources(ctx context.Context, filter model.HostResourc
 		return nil, err
 	}
 	var resources []model.HostResource
-	err = c.ExecRequestJSON(req, &resources)
+	err = c.baseClient.ExecRequestJSON(req, &resources)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (c *Client) GetHostResource(ctx context.Context, id string) (model.HostReso
 		return model.HostResource{}, err
 	}
 	var resource model.HostResource
-	err = c.ExecRequestJSON(req, &resource)
+	err = c.baseClient.ExecRequestJSON(req, &resource)
 	if err != nil {
 		return model.HostResource{}, err
 	}

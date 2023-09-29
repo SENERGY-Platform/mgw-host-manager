@@ -33,7 +33,7 @@ func (c *Client) GetHostInfo(ctx context.Context) (model.HostInfo, error) {
 		return model.HostInfo{}, err
 	}
 	var hostInfo model.HostInfo
-	err = c.ExecRequestJSON(req, &hostInfo)
+	err = c.baseClient.ExecRequestJSON(req, &hostInfo)
 	if err != nil {
 		return model.HostInfo{}, err
 	}
@@ -50,7 +50,7 @@ func (c *Client) GetHostNet(ctx context.Context) (model.HostNet, error) {
 		return model.HostNet{}, err
 	}
 	var hostNet model.HostNet
-	err = c.ExecRequestJSON(req, &hostNet)
+	err = c.baseClient.ExecRequestJSON(req, &hostNet)
 	if err != nil {
 		return model.HostNet{}, err
 	}

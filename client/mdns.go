@@ -36,7 +36,7 @@ func (c *Client) ListMDNSAdv(ctx context.Context, filter model.ServiceGroupFilte
 		return nil, err
 	}
 	var serviceGroups []model.ServiceGroup
-	err = c.ExecRequestJSON(req, &serviceGroups)
+	err = c.baseClient.ExecRequestJSON(req, &serviceGroups)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (c *Client) AddMDNSAdv(ctx context.Context, serviceGroup model.ServiceGroup
 		return err
 	}
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
-	return c.ExecRequestVoid(req)
+	return c.baseClient.ExecRequestVoid(req)
 }
 
 func (c *Client) GetMDNSAdv(ctx context.Context, id string) (model.ServiceGroup, error) {
@@ -70,7 +70,7 @@ func (c *Client) GetMDNSAdv(ctx context.Context, id string) (model.ServiceGroup,
 		return model.ServiceGroup{}, err
 	}
 	var serviceGroup model.ServiceGroup
-	err = c.ExecRequestJSON(req, &serviceGroup)
+	err = c.baseClient.ExecRequestJSON(req, &serviceGroup)
 	if err != nil {
 		return model.ServiceGroup{}, err
 	}
@@ -91,7 +91,7 @@ func (c *Client) UpdateMDNSAdv(ctx context.Context, serviceGroup model.ServiceGr
 		return err
 	}
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
-	return c.ExecRequestVoid(req)
+	return c.baseClient.ExecRequestVoid(req)
 }
 
 func (c *Client) DeleteMDNSAdv(ctx context.Context, id string) error {
@@ -103,7 +103,7 @@ func (c *Client) DeleteMDNSAdv(ctx context.Context, id string) error {
 	if err != nil {
 		return err
 	}
-	return c.ExecRequestVoid(req)
+	return c.baseClient.ExecRequestVoid(req)
 }
 
 func genServiceGroupQuery(filter model.ServiceGroupFilter) string {
