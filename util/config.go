@@ -17,7 +17,7 @@
 package util
 
 import (
-	"github.com/SENERGY-Platform/go-service-base/srv-base"
+	sb_util "github.com/SENERGY-Platform/go-service-base/util"
 	"github.com/y-du/go-log-level/level"
 	"io/fs"
 	"os"
@@ -30,17 +30,17 @@ type SocketConfig struct {
 }
 
 type Config struct {
-	Logger            srv_base.LoggerConfig `json:"logger" env_var:"LOGGER_CONFIG"`
-	Socket            SocketConfig          `json:"socket" env_var:"SOCKET_CONFIG"`
-	NetItfBlacklist   []string              `json:"net_itf_blacklist" env_var:"NET_ITF_BLACKLIST"`
-	SerialDevicePath  string                `json:"serial_device_path" env_var:"SERIAL_DEVICE_PATH"`
-	ApplicationsPath  string                `json:"applications_path" env_var:"APPLICATIONS_PATH"`
-	AvahiServicesPath string                `json:"avahi_services_path" env_var:"AVAHI_SERVICES_PATH"`
+	Logger            sb_util.LoggerConfig `json:"logger" env_var:"LOGGER_CONFIG"`
+	Socket            SocketConfig         `json:"socket" env_var:"SOCKET_CONFIG"`
+	NetItfBlacklist   []string             `json:"net_itf_blacklist" env_var:"NET_ITF_BLACKLIST"`
+	SerialDevicePath  string               `json:"serial_device_path" env_var:"SERIAL_DEVICE_PATH"`
+	ApplicationsPath  string               `json:"applications_path" env_var:"APPLICATIONS_PATH"`
+	AvahiServicesPath string               `json:"avahi_services_path" env_var:"AVAHI_SERVICES_PATH"`
 }
 
 func NewConfig(path string) (*Config, error) {
 	cfg := Config{
-		Logger: srv_base.LoggerConfig{
+		Logger: sb_util.LoggerConfig{
 			Level:        level.Warning,
 			Utc:          true,
 			Path:         "./",
@@ -56,6 +56,6 @@ func NewConfig(path string) (*Config, error) {
 		ApplicationsPath:  "./applications.json",
 		AvahiServicesPath: "/etc/avahi/services",
 	}
-	err := srv_base.LoadConfig(path, &cfg, nil, nil, nil)
+	err := sb_util.LoadConfig(path, &cfg, nil, nil, nil)
 	return &cfg, err
 }

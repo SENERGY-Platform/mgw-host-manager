@@ -21,7 +21,8 @@ import (
 	"errors"
 	"fmt"
 	gin_mw "github.com/SENERGY-Platform/gin-middleware"
-	"github.com/SENERGY-Platform/go-service-base/srv-base"
+	sb_util "github.com/SENERGY-Platform/go-service-base/util"
+	"github.com/SENERGY-Platform/go-service-base/watchdog"
 	"github.com/SENERGY-Platform/mgw-host-manager/api"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/http_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/info_hdl"
@@ -59,7 +60,7 @@ func main() {
 	logFile, err := util.InitLogger(config.Logger)
 	if err != nil {
 		_, _ = fmt.Fprintln(os.Stderr, err)
-		var logFileError *srv_base.LogFileError
+		var logFileError *sb_util.LogFileError
 		if errors.As(err, &logFileError) {
 			ec = 1
 			return
@@ -71,9 +72,10 @@ func main() {
 
 	util.Logger.Printf("%s %s", model.ServiceName, version)
 
-	util.Logger.Debugf("config: %s", srv_base.ToJsonStr(config))
+	util.Logger.Debugf("config: %s", sb_util.ToJsonStr(config))
 
-	watchdog := srv_base.NewWatchdog(util.Logger, syscall.SIGINT, syscall.SIGTERM)
+	watchdog.Logger = util.Logger
+	wtchdg := watchdog.New(syscall.SIGINT, syscall.SIGTERM)
 
 	hostInfoHdl := info_hdl.New(config.NetItfBlacklist)
 
@@ -96,7 +98,7 @@ func main() {
 	}
 
 	hostResourceHdl := resource_hdl.New(resourceHandlers)
-	util.Logger.Debugf("resource handlers: %s", srv_base.ToJsonStr(hostResourceHdl.Handlers()))
+	util.Logger.Debugf("resource handlers: %s", sb_util.ToJsonStr(hostResourceHdl.Handlers()))
 
 	mDNSAdvHdl := avahi_adv_hdl.New(config.AvahiServicesPath)
 	err = mDNSAdvHdl.Init()
@@ -120,9 +122,9 @@ func main() {
 	httpHandler.UseRawPath = true
 
 	http_hdl.SetRoutes(httpHandler, mApi)
-	util.Logger.Debugf("routes: %s", srv_base.ToJsonStr(http_hdl.GetRoutes(httpHandler)))
+	util.Logger.Debugf("routes: %s", sb_util.ToJsonStr(http_hdl.GetRoutes(httpHandler)))
 
-	listener, err := srv_base.NewUnixListener(config.Socket.Path, os.Getuid(), config.Socket.GroupID, config.Socket.FileMode)
+	listener, err := sb_util.NewUnixListener(config.Socket.Path, os.Getuid(), config.Socket.GroupID, config.Socket.FileMode)
 	if err != nil {
 		util.Logger.Error(err)
 		ec = 1
@@ -130,7 +132,7 @@ func main() {
 	}
 	server := &http.Server{Handler: httpHandler}
 	srvCtx, srvCF := context.WithCancel(context.Background())
-	watchdog.RegisterStopFunc(func() error {
+	wtchdg.RegisterStopFunc(func() error {
 		if srvCtx.Err() == nil {
 			ctxWt, cf := context.WithTimeout(context.Background(), time.Second*5)
 			defer cf()
@@ -141,7 +143,7 @@ func main() {
 		}
 		return nil
 	})
-	watchdog.RegisterHealthFunc(func() bool {
+	wtchdg.RegisterHealthFunc(func() bool {
 		if srvCtx.Err() == nil {
 			return true
 		}
@@ -149,7 +151,7 @@ func main() {
 		return false
 	})
 
-	watchdog.Start()
+	wtchdg.Start()
 
 	go func() {
 		defer srvCF()
@@ -161,5 +163,5 @@ func main() {
 		}
 	}()
 
-	ec = watchdog.Join()
+	ec = wtchdg.Join()
 }
