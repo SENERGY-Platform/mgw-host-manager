@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package http_hdl
+package util
 
 import (
 	"errors"
