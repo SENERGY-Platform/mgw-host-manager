@@ -1,5 +1,9 @@
 github.com/SENERGY-Platform/gin-middleware v0.4.3 h1:ox8i2+rFuHJAd/oKdHuayz2HHSlWfRQqAituwNVHRfA=
 github.com/SENERGY-Platform/gin-middleware v0.4.3/go.mod h1:TNjnCZSYjhYd+Rq0yu9FfYd2ct2sJK59wHtwA9Fog7o=
+github.com/SENERGY-Platform/go-service-base/srv-info-hdl v0.0.3 h1:/A2bZFh3Aol1uXuR0YAxVB4POcRSshBIG2qfIEIW+gg=
+github.com/SENERGY-Platform/go-service-base/srv-info-hdl v0.0.3/go.mod h1:Go9v41HF8FYnGr40jnzl8pfT7xvls3HXinJOiPj4Yh0=
+github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib v0.0.2 h1:Bcdxt7i3DGGvlwS6U3NY9eGJjiPuv3ZpbMwebEUV+nE=
+github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib v0.0.2/go.mod h1:vcvyLaSoZsScGQ8K/OuJxlANTs5FPozsLvPzFUZgiVM=
 github.com/SENERGY-Platform/go-service-base/util v0.14.1 h1:Dy5JIVIWnVDiq5//RBGRF0JKAIG4TaqFsa80wtlfMKE=
 github.com/SENERGY-Platform/go-service-base/util v0.14.1/go.mod h1:8W+F6aCpUnrP6SsxVStk+0MZqF71wJADGySKmZzkFBM=
 github.com/SENERGY-Platform/go-service-base/watchdog v0.4.2 h1:y88XOKuUbJdwvtDgUj9h2vTI+gwZvyB1giwoMvStrGI=

@@ -18,6 +18,8 @@ package api
 
 import (
 	"context"
+	"github.com/SENERGY-Platform/go-service-base/srv-info-hdl"
+	srv_info_lib "github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 )
@@ -26,13 +28,15 @@ type Api struct {
 	hostInfoHdl     handler.HostInfoHandler
 	hostResourceHdl handler.HostResourceHandler
 	mDNSAdvHdl      handler.MDNSAdvHandler
+	srvInfoHdl      srv_info_hdl.SrvInfoHandler
 }
 
-func New(hostInfoHandler handler.HostInfoHandler, hostResourceHandler handler.HostResourceHandler, mDNSAdvHdl handler.MDNSAdvHandler) *Api {
+func New(hostInfoHandler handler.HostInfoHandler, hostResourceHandler handler.HostResourceHandler, mDNSAdvHdl handler.MDNSAdvHandler, srvInfoHandler srv_info_hdl.SrvInfoHandler) *Api {
 	return &Api{
 		hostInfoHdl:     hostInfoHandler,
 		hostResourceHdl: hostResourceHandler,
 		mDNSAdvHdl:      mDNSAdvHdl,
+		srvInfoHdl:      srvInfoHandler,
 	}
 }
 
@@ -80,4 +84,8 @@ func (a *Api) UpdateMDNSAdv(ctx context.Context, serviceGroup model.ServiceGroup
 
 func (a *Api) DeleteMDNSAdv(ctx context.Context, id string) error {
 	return a.mDNSAdvHdl.Delete(ctx, id)
+}
+
+func (a *Api) GetSrvInfo(_ context.Context) srv_info_lib.SrvInfo {
+	return a.srvInfoHdl.GetInfo()
 }

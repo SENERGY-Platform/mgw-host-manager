@@ -4,6 +4,8 @@ go 1.22
 
 require (
 	github.com/SENERGY-Platform/gin-middleware v0.4.3
+	github.com/SENERGY-Platform/go-service-base/srv-info-hdl v0.0.3
+	github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib v0.0.2
 	github.com/SENERGY-Platform/go-service-base/util v0.14.1
 	github.com/SENERGY-Platform/go-service-base/watchdog v0.4.2
 	github.com/SENERGY-Platform/mgw-host-manager/lib v0.0.0-00010101000000-000000000000
