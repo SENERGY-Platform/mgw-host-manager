@@ -33,6 +33,7 @@ func SetRoutes(e *gin.Engine, a lib.Api) {
 	e.GET(model.MDNSAdvPath+"/:"+mDNSAdvParam, getMDNSAdvH(a))
 	e.PUT(model.MDNSAdvPath+"/:"+mDNSAdvParam, putMDNSAdvUptH(a))
 	e.DELETE(model.MDNSAdvPath+"/:"+mDNSAdvParam, deleteMDNSAdvH(a))
+	e.GET(model.SrvInfoPath, getSrvInfoH(a))
 }
 
 func GetRoutes(e *gin.Engine) [][2]string {

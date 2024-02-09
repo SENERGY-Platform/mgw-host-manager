@@ -155,3 +155,9 @@ func deleteMDNSAdvH(a lib.Api) gin.HandlerFunc {
 		gc.Status(http.StatusOK)
 	}
 }
+
+func getSrvInfoH(a lib.Api) gin.HandlerFunc {
+	return func(gc *gin.Context) {
+		gc.JSON(http.StatusOK, a.GetSrvInfo(gc.Request.Context()))
+	}
+}
