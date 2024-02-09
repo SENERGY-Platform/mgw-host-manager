@@ -18,6 +18,7 @@ package lib
 
 import (
 	"context"
+	srv_info_lib "github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 )
 
@@ -31,4 +32,5 @@ type Api interface {
 	GetMDNSAdv(ctx context.Context, id string) (model.ServiceGroup, error)
 	UpdateMDNSAdv(ctx context.Context, serviceGroup model.ServiceGroup) error
 	DeleteMDNSAdv(ctx context.Context, id string) error
+	srv_info_lib.Api
 }
