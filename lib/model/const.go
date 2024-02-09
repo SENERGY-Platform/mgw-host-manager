@@ -16,8 +16,6 @@
 
 package model
 
-const ServiceName = "host-manager"
-
 const (
 	HeaderRequestID = "X-Request-ID"
 	HeaderApiVer    = "X-Api-Version"
