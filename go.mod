@@ -3,13 +3,13 @@ module github.com/SENERGY-Platform/mgw-host-manager
 go 1.22
 
 require (
-	github.com/SENERGY-Platform/gin-middleware v0.4.2
-	github.com/SENERGY-Platform/go-service-base/util v0.14.0
-	github.com/SENERGY-Platform/go-service-base/watchdog v0.4.1
+	github.com/SENERGY-Platform/gin-middleware v0.4.3
+	github.com/SENERGY-Platform/go-service-base/util v0.14.1
+	github.com/SENERGY-Platform/go-service-base/watchdog v0.4.2
 	github.com/SENERGY-Platform/mgw-host-manager/lib v0.0.0-00010101000000-000000000000
 	github.com/gin-contrib/requestid v0.0.6
 	github.com/gin-gonic/gin v1.9.1
-	github.com/y-du/go-log-level v0.2.3
+	github.com/y-du/go-log-level v0.2.4
 )
 
 require (
@@ -32,7 +32,7 @@ require (
 	github.com/pelletier/go-toml/v2 v2.1.1 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
-	github.com/y-du/go-env-loader v0.5.1 // indirect
+	github.com/y-du/go-env-loader v0.5.2 // indirect
 	golang.org/x/arch v0.7.0 // indirect
 	golang.org/x/crypto v0.19.0 // indirect
 	golang.org/x/net v0.21.0 // indirect
