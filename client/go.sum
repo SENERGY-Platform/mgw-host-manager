@@ -1,4 +1,6 @@
 github.com/SENERGY-Platform/go-base-http-client v0.0.2 h1:sF4QDRkNjhnKQh6d8ujfxQRpeWzSTiBeYIK/aNWWOls=
 github.com/SENERGY-Platform/go-base-http-client v0.0.2/go.mod h1:NfKW/relIVTkMXhz4OqZlzJXYPQUYEKxwqou8D0B/Kw=
-github.com/SENERGY-Platform/mgw-host-manager/lib v0.1.6 h1:c4/Ti+2VI7axXRlGdR3NN9atzXhyLVZY+Zy3EMBpM2E=
-github.com/SENERGY-Platform/mgw-host-manager/lib v0.1.6/go.mod h1:0l+f3ccr/IuZyqWjg2cU3a0K7TXWB7cQB4hSw5+XYMM=
+github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib v0.0.2 h1:Bcdxt7i3DGGvlwS6U3NY9eGJjiPuv3ZpbMwebEUV+nE=
+github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib v0.0.2/go.mod h1:vcvyLaSoZsScGQ8K/OuJxlANTs5FPozsLvPzFUZgiVM=
+github.com/SENERGY-Platform/mgw-host-manager/lib v0.1.7 h1:Lqqq2bOyMUhzoDueLsji4FVIGCJfjQHBtDVouPANY7E=
+github.com/SENERGY-Platform/mgw-host-manager/lib v0.1.7/go.mod h1:SNd5TWoaX9xiEr0VHxMTK4X3GBvGQTdBtk2fbh65aBk=
