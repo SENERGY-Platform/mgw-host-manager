@@ -36,6 +36,7 @@ type Config struct {
 	SerialDevicePath  string               `json:"serial_device_path" env_var:"SERIAL_DEVICE_PATH"`
 	ApplicationsPath  string               `json:"applications_path" env_var:"APPLICATIONS_PATH"`
 	AvahiServicesPath string               `json:"avahi_services_path" env_var:"AVAHI_SERVICES_PATH"`
+	CoreID            string               `json:"core_id" env_var:"CORE_ID"`
 }
 
 func NewConfig(path string) (*Config, error) {
