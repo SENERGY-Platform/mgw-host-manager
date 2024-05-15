@@ -35,13 +35,15 @@ const extension = "service"
 
 type Handler struct {
 	srvPath   string
+	coreID    string
 	srvGroups map[string]model.ServiceGroup
 	mu        sync.RWMutex
 }
 
-func New(servicePath string) *Handler {
+func New(servicePath string, coreID string) *Handler {
 	return &Handler{
 		srvPath: servicePath,
+		coreID:  coreID,
 	}
 }
 

@@ -103,7 +103,7 @@ func main() {
 	hostResourceHdl := resource_hdl.New(resourceHandlers)
 	util.Logger.Debugf("resource handlers: %s", sb_util.ToJsonStr(hostResourceHdl.Handlers()))
 
-	mDNSAdvHdl := avahi_adv_hdl.New(config.AvahiServicesPath)
+	mDNSAdvHdl := avahi_adv_hdl.New(config.AvahiServicesPath, config.CoreID)
 	err = mDNSAdvHdl.Init()
 	if err != nil {
 		util.Logger.Error(err)
