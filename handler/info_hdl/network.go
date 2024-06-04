@@ -82,10 +82,10 @@ func (h *Handler) getNetInterfaces(ctx context.Context) ([]model.NetInterface, e
 				continue
 			}
 			interfaces = append(interfaces, model.NetInterface{
-				Name:        i.Name,
-				IPv4Address: ip.String(),
-				IPv4NetMask: values[1],
-				IPv4CIDR:    values[0],
+				Name:            i.Name,
+				IPv4Address:     ip.String(),
+				IPv4AddressCIDR: values[0],
+				IPv4Netmask:     values[1],
 			})
 		}
 	}
