@@ -74,6 +74,9 @@ func (h *Handler) getNetInterfaces(ctx context.Context) ([]model.NetInterface, e
 			if ip == nil {
 				continue
 			}
+			if h.blacklistedNetwork(ip) {
+				continue
+			}
 			values, ok := addrMap[ip.String()]
 			if !ok {
 				continue
@@ -96,6 +99,27 @@ func (h *Handler) blacklistedInterface(name string) bool {
 		}
 	}
 	return false
+}
+
+func (h *Handler) blacklistedNetwork(ip net.IP) bool {
+	for _, ipNet := range h.netRangeBlacklist {
+		if ipNet.Contains(ip) {
+			return true
+		}
+	}
+	return false
+}
+
+func genIPNets(cidrAddrs []string) ([]*net.IPNet, error) {
+	var ipNets []*net.IPNet
+	for _, cidrAddr := range cidrAddrs {
+		_, ipNet, err := net.ParseCIDR(cidrAddr)
+		if err != nil {
+			return nil, err
+		}
+		ipNets = append(ipNets, ipNet)
+	}
+	return ipNets, nil
 }
 
 func getInterfaceAddr(i net.Interface) (net.IP, error) {

@@ -18,16 +18,23 @@ package info_hdl
 
 import (
 	"context"
+	"net"
 )
 
 type Handler struct {
 	netInterfaceBlacklist []string
+	netRangeBlacklist     []*net.IPNet
 }
 
-func New(netInterfaceBlacklist []string) *Handler {
+func New(netInterfaceBlacklist []string, netRangeBlacklist []string) (*Handler, error) {
+	ipNets, err := genIPNets(netRangeBlacklist)
+	if err != nil {
+		return nil, err
+	}
 	return &Handler{
 		netInterfaceBlacklist: netInterfaceBlacklist,
-	}
+		netRangeBlacklist:     ipNets,
+	}, nil
 }
 
 func (h *Handler) GetCPU(ctx context.Context) error {

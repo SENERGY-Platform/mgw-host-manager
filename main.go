@@ -80,7 +80,12 @@ func main() {
 	watchdog.Logger = util.Logger
 	wtchdg := watchdog.New(syscall.SIGINT, syscall.SIGTERM)
 
-	hostInfoHdl := info_hdl.New(config.NetItfBlacklist)
+	hostInfoHdl, err := info_hdl.New(config.NetItfBlacklist, config.NetRngBlacklist)
+	if err != nil {
+		util.Logger.Error(err)
+		ec = 1
+		return
+	}
 
 	resourceHandlers := make(map[model.ResourceType]resource_hdl.ResHandler)
 
