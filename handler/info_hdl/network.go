@@ -40,6 +40,18 @@ func (h *Handler) GetNet(ctx context.Context) (model.HostNet, error) {
 }
 
 func (h *Handler) getNetInterfaces(ctx context.Context) ([]model.NetInterface, error) {
+	addrMap := make(map[string][2]string)
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return nil, err
+	}
+	for _, addr := range addrs {
+		ip, n, err := net.ParseCIDR(addr.String())
+		if err != nil {
+			return nil, err
+		}
+		addrMap[ip.String()] = [2]string{addr.String(), net.IP(n.Mask).String()}
+	}
 	ifs, err := net.Interfaces()
 	if err != nil {
 		return nil, err
@@ -60,10 +72,15 @@ func (h *Handler) getNetInterfaces(ctx context.Context) ([]model.NetInterface, e
 			if ip == nil {
 				continue
 			}
+			values, ok := addrMap[ip.String()]
+			if !ok {
+				continue
+			}
 			interfaces = append(interfaces, model.NetInterface{
 				Name:        i.Name,
 				IPv4Address: ip.String(),
-				IPv4NetMask: net.IP(ip.DefaultMask()).String(),
+				IPv4NetMask: values[1],
+				IPv4CIDR:    values[0],
 			})
 		}
 	}
