@@ -50,7 +50,9 @@ func (h *Handler) getNetInterfaces(ctx context.Context) ([]model.NetInterface, e
 		if err != nil {
 			return nil, err
 		}
-		addrMap[ip.String()] = [2]string{addr.String(), net.IP(n.Mask).String()}
+		if n != nil {
+			addrMap[ip.String()] = [2]string{addr.String(), net.IP(n.Mask).String()}
+		}
 	}
 	ifs, err := net.Interfaces()
 	if err != nil {
