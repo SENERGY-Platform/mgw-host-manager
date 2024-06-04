@@ -5,5 +5,5 @@ go 1.22
 require (
 	github.com/SENERGY-Platform/go-base-http-client v0.0.2
 	github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib v0.0.2
-	github.com/SENERGY-Platform/mgw-host-manager/lib v0.1.7
+	github.com/SENERGY-Platform/mgw-host-manager/lib v0.2.0
 )
