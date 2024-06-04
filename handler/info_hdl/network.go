@@ -18,6 +18,7 @@ package info_hdl
 
 import (
 	"context"
+	"fmt"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"net"
 	"os"
@@ -40,7 +41,7 @@ func (h *Handler) GetNet(ctx context.Context) (model.HostNet, error) {
 }
 
 func (h *Handler) getNetInterfaces(ctx context.Context) ([]model.NetInterface, error) {
-	addrMap := make(map[string][2]string)
+	addrMap := make(map[string][2]string) // addr:[mask, net-cidr]
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
 		return nil, err
@@ -51,7 +52,8 @@ func (h *Handler) getNetInterfaces(ctx context.Context) ([]model.NetInterface, e
 			return nil, err
 		}
 		if n != nil {
-			addrMap[ip.String()] = [2]string{addr.String(), net.IP(n.Mask).String()}
+			sz, _ := n.Mask.Size()
+			addrMap[ip.String()] = [2]string{net.IP(n.Mask).String(), n.IP.String() + fmt.Sprintf("/%d", sz)}
 		}
 	}
 	ifs, err := net.Interfaces()
@@ -82,10 +84,10 @@ func (h *Handler) getNetInterfaces(ctx context.Context) ([]model.NetInterface, e
 				continue
 			}
 			interfaces = append(interfaces, model.NetInterface{
-				Name:            i.Name,
-				IPv4Address:     ip.String(),
-				IPv4AddressCIDR: values[0],
-				IPv4Netmask:     values[1],
+				Name:     i.Name,
+				IPv4Addr: ip.String(),
+				IPv4Mask: values[0],
+				IPv4Net:  values[1],
 			})
 		}
 	}
