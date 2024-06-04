@@ -28,8 +28,8 @@ type HostNet struct {
 }
 
 type NetInterface struct {
-	Name            string `json:"name"`
-	IPv4Address     string `json:"ipv4_address"`
-	IPv4AddressCIDR string `json:"ipv4_address_cidr"`
-	IPv4Netmask     string `json:"ipv4_netmask"`
+	Name     string `json:"name"`
+	IPv4Addr string `json:"ipv4_addr"`
+	IPv4Mask string `json:"ipv4_mask"`
+	IPv4Net  string `json:"ipv4_net"`
 }
