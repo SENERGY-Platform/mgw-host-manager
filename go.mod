@@ -4,7 +4,7 @@ go 1.22
 
 require (
 	github.com/SENERGY-Platform/gin-middleware v0.4.3
-	github.com/SENERGY-Platform/go-service-base/config-hdl v0.1.0
+	github.com/SENERGY-Platform/go-service-base/config-hdl v0.1.1
 	github.com/SENERGY-Platform/go-service-base/logger v0.2.0
 	github.com/SENERGY-Platform/go-service-base/srv-info-hdl v0.0.3
 	github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib v0.0.2
