@@ -18,9 +18,12 @@ package util
 
 import (
 	"github.com/SENERGY-Platform/go-service-base/config-hdl"
+	sb_logger "github.com/SENERGY-Platform/go-service-base/logger"
+	envldr "github.com/y-du/go-env-loader"
 	"github.com/y-du/go-log-level/level"
 	"io/fs"
 	"os"
+	"reflect"
 )
 
 type SocketConfig struct {
@@ -68,6 +71,6 @@ func NewConfig(path string) (*Config, error) {
 		ApplicationsPath:  "./applications.json",
 		AvahiServicesPath: "/etc/avahi/services",
 	}
-	err := config_hdl.Load(&cfg, nil, nil, nil, path)
+	err := config_hdl.Load(&cfg, nil, map[reflect.Type]envldr.Parser{reflect.TypeOf(level.Off): sb_logger.LevelParser}, nil, path)
 	return &cfg, err
 }
