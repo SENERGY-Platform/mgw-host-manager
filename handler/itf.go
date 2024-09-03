@@ -32,11 +32,3 @@ type HostResourceHandler interface {
 	List(ctx context.Context, filter model.HostResourceFilter) ([]model.HostResource, error)
 	Get(ctx context.Context, rID string) (model.HostResource, error)
 }
-
-type MDNSAdvHandler interface {
-	List(ctx context.Context, filter model.ServiceGroupFilter) ([]model.ServiceGroup, error)
-	Add(ctx context.Context, sg model.ServiceGroup) error
-	Get(ctx context.Context, id string) (model.ServiceGroup, error)
-	Update(ctx context.Context, sg model.ServiceGroup) error
-	Delete(ctx context.Context, id string) error
-}
