@@ -28,7 +28,6 @@ import (
 	"github.com/SENERGY-Platform/mgw-host-manager/api"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/http_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/info_hdl"
-	"github.com/SENERGY-Platform/mgw-host-manager/handler/mdns_hdl/avahi_adv_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/resource_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/resource_hdl/application_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/resource_hdl/serial_hdl"
@@ -109,15 +108,7 @@ func main() {
 	hostResourceHdl := resource_hdl.New(resourceHandlers)
 	util.Logger.Debugf("resource handlers: %s", sb_util.ToJsonStr(hostResourceHdl.Handlers()))
 
-	mDNSAdvHdl := avahi_adv_hdl.New(config.AvahiServicesPath, config.CoreID)
-	err = mDNSAdvHdl.Init()
-	if err != nil {
-		util.Logger.Error(err)
-		ec = 1
-		return
-	}
-
-	mApi := api.New(hostInfoHdl, hostResourceHdl, mDNSAdvHdl, srvInfoHdl)
+	mApi := api.New(hostInfoHdl, hostResourceHdl, srvInfoHdl)
 
 	gin.SetMode(gin.ReleaseMode)
 	httpHandler := gin.New()
