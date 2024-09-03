@@ -27,10 +27,5 @@ type Api interface {
 	GetHostNet(ctx context.Context) (model.HostNet, error)
 	ListHostResources(ctx context.Context, filter model.HostResourceFilter) ([]model.HostResource, error)
 	GetHostResource(ctx context.Context, rID string) (model.HostResource, error)
-	ListMDNSAdv(ctx context.Context, filter model.ServiceGroupFilter) ([]model.ServiceGroup, error)
-	AddMDNSAdv(ctx context.Context, serviceGroup model.ServiceGroup) error
-	GetMDNSAdv(ctx context.Context, id string) (model.ServiceGroup, error)
-	UpdateMDNSAdv(ctx context.Context, serviceGroup model.ServiceGroup) error
-	DeleteMDNSAdv(ctx context.Context, id string) error
 	srv_info_lib.Api
 }
