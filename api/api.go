@@ -27,15 +27,13 @@ import (
 type Api struct {
 	hostInfoHdl     handler.HostInfoHandler
 	hostResourceHdl handler.HostResourceHandler
-	mDNSAdvHdl      handler.MDNSAdvHandler
 	srvInfoHdl      srv_info_hdl.SrvInfoHandler
 }
 
-func New(hostInfoHandler handler.HostInfoHandler, hostResourceHandler handler.HostResourceHandler, mDNSAdvHdl handler.MDNSAdvHandler, srvInfoHandler srv_info_hdl.SrvInfoHandler) *Api {
+func New(hostInfoHandler handler.HostInfoHandler, hostResourceHandler handler.HostResourceHandler, srvInfoHandler srv_info_hdl.SrvInfoHandler) *Api {
 	return &Api{
 		hostInfoHdl:     hostInfoHandler,
 		hostResourceHdl: hostResourceHandler,
-		mDNSAdvHdl:      mDNSAdvHdl,
 		srvInfoHdl:      srvInfoHandler,
 	}
 }
@@ -64,26 +62,6 @@ func (a *Api) ListHostResources(ctx context.Context, filter model.HostResourceFi
 
 func (a *Api) GetHostResource(ctx context.Context, rID string) (model.HostResource, error) {
 	return a.hostResourceHdl.Get(ctx, rID)
-}
-
-func (a *Api) ListMDNSAdv(ctx context.Context, filter model.ServiceGroupFilter) ([]model.ServiceGroup, error) {
-	return a.mDNSAdvHdl.List(ctx, filter)
-}
-
-func (a *Api) AddMDNSAdv(ctx context.Context, serviceGroup model.ServiceGroup) error {
-	return a.mDNSAdvHdl.Add(ctx, serviceGroup)
-}
-
-func (a *Api) GetMDNSAdv(ctx context.Context, id string) (model.ServiceGroup, error) {
-	return a.mDNSAdvHdl.Get(ctx, id)
-}
-
-func (a *Api) UpdateMDNSAdv(ctx context.Context, serviceGroup model.ServiceGroup) error {
-	return a.mDNSAdvHdl.Update(ctx, serviceGroup)
-}
-
-func (a *Api) DeleteMDNSAdv(ctx context.Context, id string) error {
-	return a.mDNSAdvHdl.Delete(ctx, id)
 }
 
 func (a *Api) GetSrvInfo(_ context.Context) srv_info_lib.SrvInfo {
