@@ -29,6 +29,8 @@ const (
 	HostHwPath        = "hardware"
 	HostResourcesPath = "host-resources"
 	SrvInfoPath       = "info"
+	RestrictedPath    = "restricted"
+	HostAppsPath      = "applications"
 )
 
 const (
