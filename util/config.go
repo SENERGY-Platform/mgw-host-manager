@@ -67,7 +67,6 @@ func NewConfig(path string) (*Config, error) {
 			FileMode: 0660,
 		},
 		SerialDevicePath: "/dev/serial/by-id",
-		ApplicationsPath: "./applications.json",
 	}
 	err := config_hdl.Load(&cfg, nil, map[reflect.Type]envldr.Parser{reflect.TypeOf(level.Off): sb_logger.LevelParser}, nil, path)
 	return &cfg, err
