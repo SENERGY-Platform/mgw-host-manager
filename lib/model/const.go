@@ -28,7 +28,6 @@ const (
 	HostOsPath        = "os"
 	HostHwPath        = "hardware"
 	HostResourcesPath = "host-resources"
-	MDNSAdvPath       = "mdns-services"
 	SrvInfoPath       = "info"
 )
 
