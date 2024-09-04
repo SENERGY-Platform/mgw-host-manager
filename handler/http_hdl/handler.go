@@ -25,7 +25,7 @@ import (
 
 const (
 	hostResIdParam = "r"
-	mDNSAdvParam   = "a"
+	hostAppIdParam = "a"
 )
 
 type hostResourcesQuery struct {
@@ -77,6 +77,45 @@ func getHostResourceH(a lib.Api) gin.HandlerFunc {
 			return
 		}
 		gc.JSON(http.StatusOK, resource)
+	}
+}
+
+func getHostApplicationsH(a lib.Api) gin.HandlerFunc {
+	return func(gc *gin.Context) {
+		apps, err := a.ListHostApplications(gc.Request.Context())
+		if err != nil {
+			_ = gc.Error(err)
+			return
+		}
+		gc.JSON(http.StatusOK, apps)
+	}
+}
+
+func postHostApplicationH(a lib.Api) gin.HandlerFunc {
+	return func(gc *gin.Context) {
+		var app model.HostApplicationBase
+		err := gc.ShouldBindJSON(&app)
+		if err != nil {
+			_ = gc.Error(model.NewInvalidInputError(err))
+			return
+		}
+		id, err := a.AddHostApplication(gc.Request.Context(), app)
+		if err != nil {
+			_ = gc.Error(err)
+			return
+		}
+		gc.String(http.StatusOK, id)
+	}
+}
+
+func deleteHostApplicationH(a lib.Api) gin.HandlerFunc {
+	return func(gc *gin.Context) {
+		err := a.RemoveHostApplication(gc.Request.Context(), gc.Param(hostAppIdParam))
+		if err != nil {
+			_ = gc.Error(err)
+			return
+		}
+		gc.Status(http.StatusOK)
 	}
 }
 
