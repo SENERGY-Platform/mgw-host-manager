@@ -24,11 +24,12 @@ import (
 )
 
 func SetRoutes(e *gin.Engine, a lib.Api) {
-	e.GET(model.HostInfoPath, getHostInfoH(a))
-	e.GET(model.HostInfoPath+"/"+model.HostNetPath, getHostNetH(a))
-	e.GET(model.HostResourcesPath, getHostResourcesH(a))
-	e.GET(model.HostResourcesPath+"/:"+hostResIdParam, getHostResourceH(a))
-	e.GET(model.SrvInfoPath, getSrvInfoH(a))
+	standardGrp := e.Group("")
+	restrictedGrp := e.Group(model.RestrictedPath)
+	setSrvInfoRoutes(a, standardGrp, restrictedGrp)
+	setHostInfoRoutes(a, standardGrp, restrictedGrp)
+	setHostResourcesRoutes(a, standardGrp, restrictedGrp)
+	setHostApplicationsRoutes(a, standardGrp)
 }
 
 func GetRoutes(e *gin.Engine) [][2]string {
@@ -41,4 +42,30 @@ func GetRoutes(e *gin.Engine) [][2]string {
 		rInfo = append(rInfo, [2]string{info.Method, info.Path})
 	}
 	return rInfo
+}
+
+func setHostApplicationsRoutes(a lib.Api, rg *gin.RouterGroup) {
+	rg.GET(model.HostAppsPath, getHostApplicationsH(a))
+	rg.POST(model.HostAppsPath, postHostApplicationH(a))
+	rg.DELETE(model.HostAppsPath, deleteHostApplicationH(a))
+}
+
+func setHostResourcesRoutes(a lib.Api, rGroups ...*gin.RouterGroup) {
+	for _, rg := range rGroups {
+		rg.GET(model.HostResourcesPath, getHostResourcesH(a))
+		rg.GET(model.HostResourcesPath+"/:"+hostResIdParam, getHostResourceH(a))
+	}
+}
+
+func setHostInfoRoutes(a lib.Api, rGroups ...*gin.RouterGroup) {
+	for _, rg := range rGroups {
+		rg.GET(model.HostInfoPath, getHostInfoH(a))
+		rg.GET(model.HostInfoPath+"/"+model.HostNetPath, getHostNetH(a))
+	}
+}
+
+func setSrvInfoRoutes(a lib.Api, rGroups ...*gin.RouterGroup) {
+	for _, rg := range rGroups {
+		rg.GET(model.SrvInfoPath, getSrvInfoH(a))
+	}
 }
