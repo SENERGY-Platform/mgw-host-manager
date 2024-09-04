@@ -93,6 +93,11 @@ func main() {
 		ec = 1
 		return
 	}
+	if err = hostAppHdl.Init(); err != nil {
+		util.Logger.Error(err)
+		ec = 1
+		return
+	}
 
 	hostResourceHdl := resource_hdl.New(map[model.ResourceType]resource_hdl.ResHandler{
 		model.SerialDevice: serial_hdl.New(config.SerialDevicePath),
