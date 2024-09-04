@@ -66,6 +66,18 @@ func (a *Api) GetHostResource(ctx context.Context, rID string) (model.HostResour
 	return a.hostResourceHdl.Get(ctx, rID)
 }
 
+func (a *Api) ListHostApplications(ctx context.Context) ([]model.HostApplication, error) {
+	return a.hostAppHdl.List(ctx)
+}
+
+func (a *Api) AddHostApplication(ctx context.Context, appResBase model.HostApplicationBase) (string, error) {
+	return a.hostAppHdl.Add(ctx, appResBase)
+}
+
+func (a *Api) RemoveHostApplication(ctx context.Context, aID string) error {
+	return a.hostAppHdl.Remove(ctx, aID)
+}
+
 func (a *Api) GetSrvInfo(_ context.Context) srv_info_lib.SrvInfo {
 	return a.srvInfoHdl.GetInfo()
 }
