@@ -32,3 +32,13 @@ type HostResourceBase struct {
 
 type HostResourceFilter struct {
 }
+
+type AppResource struct {
+	ID string `json:"id"`
+	AppResourceBase
+}
+
+type AppResourceBase struct {
+	Name   string `json:"name"`
+	Socket string `json:"socket"`
+}
