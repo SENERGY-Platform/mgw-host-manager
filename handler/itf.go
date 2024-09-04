@@ -32,3 +32,9 @@ type HostResourceHandler interface {
 	List(ctx context.Context, filter model.HostResourceFilter) ([]model.HostResource, error)
 	Get(ctx context.Context, rID string) (model.HostResource, error)
 }
+
+type HostApplicationHandler interface {
+	List(ctx context.Context) ([]model.AppResource, error)
+	Add(ctx context.Context, appResBase model.AppResourceBase) (string, error)
+	Remove(ctx context.Context, aID string) error
+}
