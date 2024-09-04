@@ -27,13 +27,15 @@ import (
 type Api struct {
 	hostInfoHdl     handler.HostInfoHandler
 	hostResourceHdl handler.HostResourceHandler
+	hostAppHdl      handler.HostApplicationHandler
 	srvInfoHdl      srv_info_hdl.SrvInfoHandler
 }
 
-func New(hostInfoHandler handler.HostInfoHandler, hostResourceHandler handler.HostResourceHandler, srvInfoHandler srv_info_hdl.SrvInfoHandler) *Api {
+func New(hostInfoHandler handler.HostInfoHandler, hostResourceHandler handler.HostResourceHandler, hostAppHdl handler.HostApplicationHandler, srvInfoHandler srv_info_hdl.SrvInfoHandler) *Api {
 	return &Api{
 		hostInfoHdl:     hostInfoHandler,
 		hostResourceHdl: hostResourceHandler,
+		hostAppHdl:      hostAppHdl,
 		srvInfoHdl:      srvInfoHandler,
 	}
 }

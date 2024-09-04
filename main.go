@@ -87,28 +87,20 @@ func main() {
 		return
 	}
 
-	resourceHandlers := make(map[model.ResourceType]resource_hdl.ResHandler)
-
-	resourceHandlers[model.SerialDevice] = serial_hdl.New(config.SerialDevicePath)
-
-	apps, err := application_hdl.LoadApps(config.ApplicationsPath)
+	hostAppHdl, err := application_hdl.New(config.ApplicationsPath)
 	if err != nil {
-		var pathErr *os.PathError
-		if !errors.As(err, &pathErr) {
-			util.Logger.Error(err)
-			ec = 1
-			return
-		}
-	} else {
-		if len(apps) > 0 {
-			resourceHandlers[model.Application] = application_hdl.New(apps)
-		}
+		util.Logger.Error(err)
+		ec = 1
+		return
 	}
 
-	hostResourceHdl := resource_hdl.New(resourceHandlers)
+	hostResourceHdl := resource_hdl.New(map[model.ResourceType]resource_hdl.ResHandler{
+		model.SerialDevice: serial_hdl.New(config.SerialDevicePath),
+		model.Application:  hostAppHdl,
+	})
 	util.Logger.Debugf("resource handlers: %s", sb_util.ToJsonStr(hostResourceHdl.Handlers()))
 
-	mApi := api.New(hostInfoHdl, hostResourceHdl, srvInfoHdl)
+	mApi := api.New(hostInfoHdl, hostResourceHdl, hostAppHdl, srvInfoHdl)
 
 	gin.SetMode(gin.ReleaseMode)
 	httpHandler := gin.New()
