@@ -27,5 +27,8 @@ type Api interface {
 	GetHostNet(ctx context.Context) (model.HostNet, error)
 	ListHostResources(ctx context.Context, filter model.HostResourceFilter) ([]model.HostResource, error)
 	GetHostResource(ctx context.Context, rID string) (model.HostResource, error)
+	ListHostApplications(ctx context.Context) ([]model.HostApplication, error)
+	AddHostApplication(ctx context.Context, appResBase model.HostApplicationBase) (string, error)
+	RemoveHostApplication(ctx context.Context, aID string) error
 	srv_info_lib.Api
 }
