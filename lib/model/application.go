@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 InfAI (CC SES)
+ * Copyright 2024 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,12 @@
 
 package model
 
-type ResourceType = string
-
-type HostResource struct {
-	ID   string       `json:"id"`
-	Type ResourceType `json:"type"`
-	HostResourceBase
+type HostApplication struct {
+	ID string `json:"id"`
+	HostApplicationBase
 }
 
-type HostResourceBase struct {
-	Name string   `json:"name"`
-	Tags []string `json:"tags"`
-	Path string   `json:"path"`
-}
-
-type HostResourceFilter struct {
+type HostApplicationBase struct {
+	Name   string `json:"name"`
+	Socket string `json:"socket"`
 }

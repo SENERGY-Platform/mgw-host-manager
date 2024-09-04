@@ -31,7 +31,7 @@ import (
 )
 
 type Handler struct {
-	apps map[string]model.AppResource
+	apps map[string]model.HostApplication
 	path string
 	mu   sync.RWMutex
 }
@@ -42,7 +42,7 @@ func New(p string) (*Handler, error) {
 	}
 	return &Handler{
 		path: p,
-		apps: make(map[string]model.AppResource),
+		apps: make(map[string]model.HostApplication),
 	}, nil
 }
 
@@ -69,17 +69,17 @@ func (h *Handler) Init() error {
 	return nil
 }
 
-func (h *Handler) List(_ context.Context) ([]model.AppResource, error) {
+func (h *Handler) List(_ context.Context) ([]model.HostApplication, error) {
 	h.mu.RLock()
 	defer h.mu.RUnlock()
-	apps := make([]model.AppResource, len(h.apps))
+	apps := make([]model.HostApplication, len(h.apps))
 	for _, app := range h.apps {
 		apps = append(apps, app)
 	}
 	return apps, nil
 }
 
-func (h *Handler) Add(_ context.Context, appResBase model.AppResourceBase) (string, error) {
+func (h *Handler) Add(_ context.Context, appResBase model.HostApplicationBase) (string, error) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 	idObj, err := uuid.NewUUID()
@@ -87,9 +87,9 @@ func (h *Handler) Add(_ context.Context, appResBase model.AppResourceBase) (stri
 		return "", model.NewInternalError(err)
 	}
 	id := idObj.String()
-	h.apps[id] = model.AppResource{
-		ID:              id,
-		AppResourceBase: appResBase,
+	h.apps[id] = model.HostApplication{
+		ID:                  id,
+		HostApplicationBase: appResBase,
 	}
 	if err := writeStoFile(h.apps, h.path); err != nil {
 		delete(h.apps, id)
@@ -104,7 +104,7 @@ func (h *Handler) Remove(_ context.Context, id string) error {
 	if _, ok := h.apps[id]; !ok {
 		return model.NewNotFoundError(fmt.Errorf("application '%s' does not exist", id))
 	}
-	newApps := make(map[string]model.AppResource)
+	newApps := make(map[string]model.HostApplication)
 	for i, app := range h.apps {
 		if i != id {
 			newApps[i] = app
@@ -128,7 +128,7 @@ func (h *Handler) Get(_ context.Context) (map[string]model.HostResourceBase, err
 	return resources, nil
 }
 
-func migrateStoFile(p string) (map[string]model.AppResource, error) {
+func migrateStoFile(p string) (map[string]model.HostApplication, error) {
 	if err := copyFile(p, p+".migration_bk"); err != nil {
 		return nil, err
 	}
@@ -138,13 +138,13 @@ func migrateStoFile(p string) (map[string]model.AppResource, error) {
 	}
 	defer file.Close()
 	decoder := json.NewDecoder(file)
-	var oldFmt []model.AppResourceBase
+	var oldFmt []model.HostApplicationBase
 	if err = decoder.Decode(&oldFmt); err != nil {
 		return nil, err
 	}
-	newFmt := make(map[string]model.AppResource)
+	newFmt := make(map[string]model.HostApplication)
 	for _, app := range oldFmt {
-		newFmt[util.GenHash(app.Socket)] = model.AppResource{AppResourceBase: app}
+		newFmt[util.GenHash(app.Socket)] = model.HostApplication{HostApplicationBase: app}
 	}
 	if err = writeStoFile(newFmt, p); err != nil {
 		return nil, err
@@ -152,21 +152,21 @@ func migrateStoFile(p string) (map[string]model.AppResource, error) {
 	return newFmt, nil
 }
 
-func readStoFile(p string) (map[string]model.AppResource, error) {
+func readStoFile(p string) (map[string]model.HostApplication, error) {
 	file, err := os.Open(p)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 	decoder := json.NewDecoder(file)
-	var apps map[string]model.AppResource
+	var apps map[string]model.HostApplication
 	if err = decoder.Decode(&apps); err != nil {
 		return nil, err
 	}
 	return apps, nil
 }
 
-func writeStoFile(apps map[string]model.AppResource, p string) error {
+func writeStoFile(apps map[string]model.HostApplication, p string) error {
 	if err := copyFile(p, p+".bk"); err != nil {
 		if !errors.Is(err, os.ErrNotExist) {
 			return err
