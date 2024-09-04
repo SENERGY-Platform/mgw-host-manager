@@ -19,55 +19,185 @@ package application_hdl
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"github.com/SENERGY-Platform/mgw-host-manager/util"
+	"github.com/google/uuid"
+	"io"
 	"os"
+	"path"
+	"sync"
 )
 
 type Handler struct {
-	resources map[string]model.HostResourceBase
+	apps map[string]model.AppResource
+	path string
+	mu   sync.RWMutex
 }
 
-type Application struct {
-	Name   string `json:"name"`
-	Socket string `json:"socket"`
+func New(p string) (*Handler, error) {
+	if !path.IsAbs(p) {
+		return nil, fmt.Errorf("path '%s' not absolute", p)
+	}
+	return &Handler{
+		path: p,
+		apps: make(map[string]model.AppResource),
+	}, nil
 }
 
-func New(applications []Application) *Handler {
+func (h *Handler) Init() error {
+	apps, err := readStoFile(h.path)
+	if err != nil {
+		var jutErr *json.UnmarshalTypeError
+		switch {
+		case errors.Is(err, os.ErrNotExist):
+			return nil
+		case errors.As(err, &jutErr):
+			apps, err = migrateStoFile(h.path)
+			if err != nil {
+				if errors.Is(err, os.ErrNotExist) {
+					return nil
+				}
+				return err
+			}
+		default:
+			return err
+		}
+	}
+	h.apps = apps
+	return nil
+}
+
+func (h *Handler) List(_ context.Context) ([]model.AppResource, error) {
+	h.mu.RLock()
+	defer h.mu.RUnlock()
+	apps := make([]model.AppResource, len(h.apps))
+	for _, app := range h.apps {
+		apps = append(apps, app)
+	}
+	return apps, nil
+}
+
+func (h *Handler) Add(_ context.Context, appResBase model.AppResourceBase) (string, error) {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	idObj, err := uuid.NewUUID()
+	if err != nil {
+		return "", model.NewInternalError(err)
+	}
+	id := idObj.String()
+	h.apps[id] = model.AppResource{
+		ID:              id,
+		AppResourceBase: appResBase,
+	}
+	if err := writeStoFile(h.apps, h.path); err != nil {
+		delete(h.apps, id)
+		return "", err
+	}
+	return id, nil
+}
+
+func (h *Handler) Remove(_ context.Context, id string) error {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	if _, ok := h.apps[id]; !ok {
+		return model.NewNotFoundError(fmt.Errorf("application '%s' does not exist", id))
+	}
+	newApps := make(map[string]model.AppResource)
+	for i, app := range h.apps {
+		if i != id {
+			newApps[i] = app
+		}
+	}
+	if err := writeStoFile(newApps, h.path); err != nil {
+		return err
+	}
+	h.apps = newApps
+	return nil
+}
+
+func (h *Handler) Get(_ context.Context) (map[string]model.HostResourceBase, error) {
 	resources := make(map[string]model.HostResourceBase)
-	for _, app := range applications {
-		resources[util.GenHash(app.Socket)] = model.HostResourceBase{
+	for id, app := range h.apps {
+		resources[id] = model.HostResourceBase{
 			Name: app.Name,
-			Tags: nil,
 			Path: app.Socket,
 		}
 	}
-	return &Handler{
-		resources: resources,
-	}
+	return resources, nil
 }
 
-func LoadApps(path string) ([]Application, error) {
-	file, err := os.Open(path)
+func migrateStoFile(p string) (map[string]model.AppResource, error) {
+	if err := copyFile(p, p+".migration_bk"); err != nil {
+		return nil, err
+	}
+	file, err := os.Open(p)
 	if err != nil {
 		return nil, err
 	}
 	defer file.Close()
 	decoder := json.NewDecoder(file)
-	var d []Application
-	if err = decoder.Decode(&d); err != nil {
+	var oldFmt []model.AppResourceBase
+	if err = decoder.Decode(&oldFmt); err != nil {
 		return nil, err
 	}
-	return d, nil
+	newFmt := make(map[string]model.AppResource)
+	for _, app := range oldFmt {
+		newFmt[util.GenHash(app.Socket)] = model.AppResource{AppResourceBase: app}
+	}
+	if err = writeStoFile(newFmt, p); err != nil {
+		return nil, err
+	}
+	return newFmt, nil
 }
 
-func (h *Handler) Get(ctx context.Context) (map[string]model.HostResourceBase, error) {
-	resources := make(map[string]model.HostResourceBase)
-	for id, res := range h.resources {
-		if ctx.Err() != nil {
-			return nil, model.NewInternalError(ctx.Err())
-		}
-		resources[id] = res
+func readStoFile(p string) (map[string]model.AppResource, error) {
+	file, err := os.Open(p)
+	if err != nil {
+		return nil, err
 	}
-	return resources, nil
+	defer file.Close()
+	decoder := json.NewDecoder(file)
+	var apps map[string]model.AppResource
+	if err = decoder.Decode(&apps); err != nil {
+		return nil, err
+	}
+	return apps, nil
+}
+
+func writeStoFile(apps map[string]model.AppResource, p string) error {
+	if err := copyFile(p, p+".bk"); err != nil {
+		if !errors.Is(err, os.ErrNotExist) {
+			return err
+		}
+	}
+	file, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	if err = json.NewEncoder(file).Encode(apps); err != nil {
+		e := copyFile(p+".bk", p)
+		if e != nil && !errors.Is(e, os.ErrNotExist) {
+			util.Logger.Error(e)
+		}
+		return err
+	}
+	return nil
+}
+
+func copyFile(src, dst string) error {
+	sFile, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer sFile.Close()
+	dFile, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer dFile.Close()
+	_, err = io.Copy(dFile, sFile)
+	return err
 }
