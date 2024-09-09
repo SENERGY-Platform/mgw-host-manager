@@ -91,7 +91,7 @@ func (h *Handler) Add(_ context.Context, appResBase model.HostApplicationBase) (
 		ID:                  id,
 		HostApplicationBase: appResBase,
 	}
-	if err := writeStoFile(h.apps, h.path); err != nil {
+	if err := writeStoFile(h.apps, h.path, true); err != nil {
 		delete(h.apps, id)
 		return "", err
 	}
@@ -110,7 +110,7 @@ func (h *Handler) Remove(_ context.Context, id string) error {
 			newApps[i] = app
 		}
 	}
-	if err := writeStoFile(newApps, h.path); err != nil {
+	if err := writeStoFile(newApps, h.path, true); err != nil {
 		return err
 	}
 	h.apps = newApps
@@ -146,7 +146,7 @@ func migrateStoFile(p string) (map[string]model.HostApplication, error) {
 	for _, app := range oldFmt {
 		newFmt[util.GenHash(app.Socket)] = model.HostApplication{HostApplicationBase: app}
 	}
-	if err = writeStoFile(newFmt, p); err != nil {
+	if err = writeStoFile(newFmt, p, false); err != nil {
 		return nil, err
 	}
 	return newFmt, nil
@@ -166,10 +166,12 @@ func readStoFile(p string) (map[string]model.HostApplication, error) {
 	return apps, nil
 }
 
-func writeStoFile(apps map[string]model.HostApplication, p string) error {
-	if err := copyFile(p, p+".bk"); err != nil {
-		if !errors.Is(err, os.ErrNotExist) {
-			return err
+func writeStoFile(apps map[string]model.HostApplication, p string, backup bool) error {
+	if backup {
+		if err := copyFile(p, p+".bk"); err != nil {
+			if !errors.Is(err, os.ErrNotExist) {
+				return err
+			}
 		}
 	}
 	file, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE, 0666)
@@ -178,9 +180,11 @@ func writeStoFile(apps map[string]model.HostApplication, p string) error {
 	}
 	defer file.Close()
 	if err = json.NewEncoder(file).Encode(apps); err != nil {
-		e := copyFile(p+".bk", p)
-		if e != nil && !errors.Is(e, os.ErrNotExist) {
-			util.Logger.Error(e)
+		if backup {
+			e := copyFile(p+".bk", p)
+			if e != nil && !errors.Is(e, os.ErrNotExist) {
+				util.Logger.Error(e)
+			}
 		}
 		return err
 	}
