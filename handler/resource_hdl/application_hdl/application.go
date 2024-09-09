@@ -144,7 +144,11 @@ func migrateStoFile(p string) (map[string]model.HostApplication, error) {
 	}
 	newFmt := make(map[string]model.HostApplication)
 	for _, app := range oldFmt {
-		newFmt[util.GenHash(app.Socket)] = model.HostApplication{HostApplicationBase: app}
+		id := util.GenHash(app.Socket)
+		newFmt[id] = model.HostApplication{
+			ID:                  id,
+			HostApplicationBase: app,
+		}
 	}
 	if err = writeStoFile(newFmt, p, false); err != nil {
 		return nil, err
