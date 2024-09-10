@@ -38,3 +38,10 @@ type HostApplicationHandler interface {
 	Add(ctx context.Context, appResBase model.HostApplicationBase) (string, error)
 	Remove(ctx context.Context, aID string) error
 }
+
+type BlacklistHandler interface {
+	List(ctx context.Context) ([]string, error)
+	Add(ctx context.Context, v string) error
+	Remove(ctx context.Context, v string) error
+	Has(ctx context.Context, v string) (bool, error)
+}
