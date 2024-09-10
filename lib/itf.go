@@ -30,5 +30,11 @@ type Api interface {
 	ListHostApplications(ctx context.Context) ([]model.HostApplication, error)
 	AddHostApplication(ctx context.Context, appResBase model.HostApplicationBase) (string, error)
 	RemoveHostApplication(ctx context.Context, aID string) error
+	GetNetItfBlacklist(ctx context.Context) ([]string, error)
+	NetItfBlacklistAdd(ctx context.Context, v string) error
+	NetItfBlacklistRemove(ctx context.Context, v string) error
+	GetNetRngBlacklist(ctx context.Context) ([]string, error)
+	NetRngBlacklistAdd(ctx context.Context, v string) error
+	NetRngBlacklistRemove(ctx context.Context, v string) error
 	srv_info_lib.Api
 }

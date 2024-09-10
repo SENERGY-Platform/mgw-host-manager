@@ -25,18 +25,22 @@ import (
 )
 
 type Api struct {
-	hostInfoHdl     handler.HostInfoHandler
-	hostResourceHdl handler.HostResourceHandler
-	hostAppHdl      handler.HostApplicationHandler
-	srvInfoHdl      srv_info_hdl.SrvInfoHandler
+	hostInfoHdl        handler.HostInfoHandler
+	hostResourceHdl    handler.HostResourceHandler
+	hostAppHdl         handler.HostApplicationHandler
+	netItfBlacklistHdl handler.BlacklistHandler
+	netRngBlacklistHdl handler.BlacklistHandler
+	srvInfoHdl         srv_info_hdl.SrvInfoHandler
 }
 
-func New(hostInfoHandler handler.HostInfoHandler, hostResourceHandler handler.HostResourceHandler, hostAppHdl handler.HostApplicationHandler, srvInfoHandler srv_info_hdl.SrvInfoHandler) *Api {
+func New(hostInfoHandler handler.HostInfoHandler, hostResourceHandler handler.HostResourceHandler, hostAppHdl handler.HostApplicationHandler, netItfBlacklistHdl, netRngBlacklistHdl handler.BlacklistHandler, srvInfoHandler srv_info_hdl.SrvInfoHandler) *Api {
 	return &Api{
-		hostInfoHdl:     hostInfoHandler,
-		hostResourceHdl: hostResourceHandler,
-		hostAppHdl:      hostAppHdl,
-		srvInfoHdl:      srvInfoHandler,
+		hostInfoHdl:        hostInfoHandler,
+		hostResourceHdl:    hostResourceHandler,
+		hostAppHdl:         hostAppHdl,
+		netItfBlacklistHdl: netItfBlacklistHdl,
+		netRngBlacklistHdl: netRngBlacklistHdl,
+		srvInfoHdl:         srvInfoHandler,
 	}
 }
 
@@ -76,6 +80,30 @@ func (a *Api) AddHostApplication(ctx context.Context, appResBase model.HostAppli
 
 func (a *Api) RemoveHostApplication(ctx context.Context, aID string) error {
 	return a.hostAppHdl.Remove(ctx, aID)
+}
+
+func (a *Api) GetNetItfBlacklist(ctx context.Context) ([]string, error) {
+	return a.netItfBlacklistHdl.List(ctx)
+}
+
+func (a *Api) NetItfBlacklistAdd(ctx context.Context, v string) error {
+	return a.netItfBlacklistHdl.Add(ctx, v)
+}
+
+func (a *Api) NetItfBlacklistRemove(ctx context.Context, v string) error {
+	return a.netItfBlacklistHdl.Remove(ctx, v)
+}
+
+func (a *Api) GetNetRngBlacklist(ctx context.Context) ([]string, error) {
+	return a.netRngBlacklistHdl.List(ctx)
+}
+
+func (a *Api) NetRngBlacklistAdd(ctx context.Context, v string) error {
+	return a.netRngBlacklistHdl.Add(ctx, v)
+}
+
+func (a *Api) NetRngBlacklistRemove(ctx context.Context, v string) error {
+	return a.netRngBlacklistHdl.Remove(ctx, v)
 }
 
 func (a *Api) GetSrvInfo(_ context.Context) srv_info_lib.SrvInfo {

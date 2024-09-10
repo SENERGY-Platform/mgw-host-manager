@@ -121,7 +121,7 @@ func main() {
 	})
 	util.Logger.Debugf("resource handlers: %s", sb_util.ToJsonStr(hostResourceHdl.Handlers()))
 
-	mApi := api.New(hostInfoHdl, hostResourceHdl, hostAppHdl, srvInfoHdl)
+	mApi := api.New(hostInfoHdl, hostResourceHdl, hostAppHdl, netInterfaceBlacklistHdl, netRangeBlacklistHdl, srvInfoHdl)
 
 	gin.SetMode(gin.ReleaseMode)
 	httpHandler := gin.New()
