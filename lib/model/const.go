@@ -31,6 +31,9 @@ const (
 	SrvInfoPath       = "info"
 	RestrictedPath    = "restricted"
 	HostAppsPath      = "applications"
+	BlacklistsPath    = "blacklists"
+	NetInterfaces     = "net-interfaces"
+	NetRanges         = "net-ranges"
 )
 
 const (
