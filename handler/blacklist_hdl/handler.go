@@ -28,9 +28,10 @@ import (
 )
 
 type Handler struct {
-	values []string
-	path   string
-	mu     sync.RWMutex
+	values      []string
+	path        string
+	validationF func(v string) error
+	mu          sync.RWMutex
 }
 
 func New(p string) (*Handler, error) {
@@ -40,6 +41,10 @@ func New(p string) (*Handler, error) {
 	return &Handler{
 		path: p,
 	}, nil
+}
+
+func (h *Handler) SetValidationFunc(f func(v string) error) {
+	h.validationF = f
 }
 
 func (h *Handler) Init() error {
@@ -65,6 +70,11 @@ func (h *Handler) List(_ context.Context) ([]string, error) {
 }
 
 func (h *Handler) Add(_ context.Context, v string) error {
+	if h.validationF != nil {
+		if err := h.validationF(v); err != nil {
+			return err
+		}
+	}
 	h.mu.Lock()
 	defer h.mu.Unlock()
 	if inSlice(v, h.values) {
