@@ -72,7 +72,7 @@ func (h *Handler) Init() error {
 func (h *Handler) List(_ context.Context) ([]model.HostApplication, error) {
 	h.mu.RLock()
 	defer h.mu.RUnlock()
-	apps := make([]model.HostApplication, len(h.apps))
+	var apps []model.HostApplication
 	for _, app := range h.apps {
 		apps = append(apps, app)
 	}
