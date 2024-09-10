@@ -26,6 +26,7 @@ import (
 	sb_util "github.com/SENERGY-Platform/go-service-base/util"
 	"github.com/SENERGY-Platform/go-service-base/watchdog"
 	"github.com/SENERGY-Platform/mgw-host-manager/api"
+	"github.com/SENERGY-Platform/mgw-host-manager/handler/blacklist_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/http_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/info_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/resource_hdl"
@@ -80,7 +81,22 @@ func main() {
 	watchdog.Logger = util.Logger
 	wtchdg := watchdog.New(syscall.SIGINT, syscall.SIGTERM)
 
-	hostInfoHdl, err := info_hdl.New(config.NetItfBlacklist, config.NetRngBlacklist)
+	netInterfaceBlacklistHdl, err := blacklist_hdl.New(config.NetItfBlacklistPath)
+	if err != nil {
+		util.Logger.Error(err)
+		ec = 1
+		return
+	}
+
+	netRangeBlacklistHdl, err := blacklist_hdl.New(config.NetRngBlacklistPath)
+	if err != nil {
+		util.Logger.Error(err)
+		ec = 1
+		return
+	}
+	netRangeBlacklistHdl.SetValidationFunc(info_hdl.ValidateCIDR)
+
+	hostInfoHdl, err := info_hdl.New(config.NetItfBlacklist, config.NetRngBlacklist, netInterfaceBlacklistHdl, netRangeBlacklistHdl)
 	if err != nil {
 		util.Logger.Error(err)
 		ec = 1

@@ -60,12 +60,26 @@ func (h *Handler) getNetInterfaces(ctx context.Context) ([]model.NetInterface, e
 	if err != nil {
 		return nil, err
 	}
+	netInterfaceBlacklist, err := h.netInterfaceBlacklistHdl.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	netInterfaceBlacklist = append(netInterfaceBlacklist, h.netInterfaceBlacklist...)
+	netRangeBlacklist, err := h.netRangeBlacklistHdl.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	ipNetBlacklist, err := genIPNets(netRangeBlacklist)
+	if err != nil {
+		return nil, err
+	}
+	ipNetBlacklist = append(ipNetBlacklist, h.netRangeBlacklist...)
 	var interfaces []model.NetInterface
 	for _, i := range ifs {
 		if ctx.Err() != nil {
 			return nil, ctx.Err()
 		}
-		if h.blacklistedInterface(i.Name) {
+		if h.blacklistedInterface(i.Name, netInterfaceBlacklist) {
 			continue
 		}
 		if i.Flags&net.FlagUp == 1 && i.Flags&net.FlagRunning != 0 && i.Flags&net.FlagLoopback == 0 {
@@ -76,7 +90,7 @@ func (h *Handler) getNetInterfaces(ctx context.Context) ([]model.NetInterface, e
 			if ip == nil {
 				continue
 			}
-			if h.blacklistedNetwork(ip) {
+			if h.blacklistedNetwork(ip, ipNetBlacklist) {
 				continue
 			}
 			values, ok := addrMap[ip.String()]
@@ -94,8 +108,8 @@ func (h *Handler) getNetInterfaces(ctx context.Context) ([]model.NetInterface, e
 	return interfaces, nil
 }
 
-func (h *Handler) blacklistedInterface(name string) bool {
-	for _, s := range h.netInterfaceBlacklist {
+func (h *Handler) blacklistedInterface(name string, list []string) bool {
+	for _, s := range list {
 		if strings.Contains(name, s) {
 			return true
 		}
@@ -103,13 +117,21 @@ func (h *Handler) blacklistedInterface(name string) bool {
 	return false
 }
 
-func (h *Handler) blacklistedNetwork(ip net.IP) bool {
-	for _, ipNet := range h.netRangeBlacklist {
+func (h *Handler) blacklistedNetwork(ip net.IP, list []*net.IPNet) bool {
+	for _, ipNet := range list {
 		if ipNet.Contains(ip) {
 			return true
 		}
 	}
 	return false
+}
+
+func ValidateCIDR(v string) error {
+	_, _, err := net.ParseCIDR(v)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func genIPNets(cidrAddrs []string) ([]*net.IPNet, error) {
