@@ -93,7 +93,7 @@ func (h *Handler) Add(_ context.Context, appResBase model.HostApplicationBase) (
 	}
 	if err := writeStoFile(h.apps, h.path, true); err != nil {
 		delete(h.apps, id)
-		return "", err
+		return "", model.NewInternalError(err)
 	}
 	return id, nil
 }
@@ -111,7 +111,7 @@ func (h *Handler) Remove(_ context.Context, id string) error {
 		}
 	}
 	if err := writeStoFile(newApps, h.path, true); err != nil {
-		return err
+		return model.NewInternalError(err)
 	}
 	h.apps = newApps
 	return nil
