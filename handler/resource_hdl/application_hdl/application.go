@@ -23,8 +23,8 @@ import (
 	"fmt"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"github.com/SENERGY-Platform/mgw-host-manager/util"
+	"github.com/SENERGY-Platform/mgw-host-manager/util/json_sto_file"
 	"github.com/google/uuid"
-	"io"
 	"os"
 	"path"
 	"sync"
@@ -47,8 +47,8 @@ func New(p string) (*Handler, error) {
 }
 
 func (h *Handler) Init() error {
-	apps, err := readStoFile(h.path)
-	if err != nil {
+	var apps map[string]model.HostApplication
+	if err := json_sto_file.Read(h.path, &apps); err != nil {
 		var jutErr *json.UnmarshalTypeError
 		switch {
 		case errors.Is(err, os.ErrNotExist):
@@ -91,7 +91,7 @@ func (h *Handler) Add(_ context.Context, appResBase model.HostApplicationBase) (
 		ID:                  id,
 		HostApplicationBase: appResBase,
 	}
-	if err := writeStoFile(h.apps, h.path, true); err != nil {
+	if err = json_sto_file.Write(h.apps, h.path, true); err != nil {
 		delete(h.apps, id)
 		return "", model.NewInternalError(err)
 	}
@@ -110,7 +110,7 @@ func (h *Handler) Remove(_ context.Context, id string) error {
 			newApps[i] = app
 		}
 	}
-	if err := writeStoFile(newApps, h.path, true); err != nil {
+	if err := json_sto_file.Write(newApps, h.path, true); err != nil {
 		return model.NewInternalError(err)
 	}
 	h.apps = newApps
@@ -129,7 +129,7 @@ func (h *Handler) Get(_ context.Context) (map[string]model.HostResourceBase, err
 }
 
 func migrateStoFile(p string) (map[string]model.HostApplication, error) {
-	if err := copyFile(p, p+".migration_bk"); err != nil {
+	if err := json_sto_file.Copy(p, p+".migration_bk"); err != nil {
 		return nil, err
 	}
 	file, err := os.Open(p)
@@ -150,62 +150,8 @@ func migrateStoFile(p string) (map[string]model.HostApplication, error) {
 			HostApplicationBase: app,
 		}
 	}
-	if err = writeStoFile(newFmt, p, false); err != nil {
+	if err = json_sto_file.Write(newFmt, p, false); err != nil {
 		return nil, err
 	}
 	return newFmt, nil
-}
-
-func readStoFile(p string) (map[string]model.HostApplication, error) {
-	file, err := os.Open(p)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-	decoder := json.NewDecoder(file)
-	var apps map[string]model.HostApplication
-	if err = decoder.Decode(&apps); err != nil {
-		return nil, err
-	}
-	return apps, nil
-}
-
-func writeStoFile(apps map[string]model.HostApplication, p string, backup bool) error {
-	if backup {
-		if err := copyFile(p, p+".bk"); err != nil {
-			if !errors.Is(err, os.ErrNotExist) {
-				return err
-			}
-		}
-	}
-	file, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE, 0666)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	if err = json.NewEncoder(file).Encode(apps); err != nil {
-		if backup {
-			e := copyFile(p+".bk", p)
-			if e != nil && !errors.Is(e, os.ErrNotExist) {
-				util.Logger.Error(e)
-			}
-		}
-		return err
-	}
-	return nil
-}
-
-func copyFile(src, dst string) error {
-	sFile, err := os.Open(src)
-	if err != nil {
-		return err
-	}
-	defer sFile.Close()
-	dFile, err := os.Create(dst)
-	if err != nil {
-		return err
-	}
-	defer dFile.Close()
-	_, err = io.Copy(dFile, sFile)
-	return err
 }

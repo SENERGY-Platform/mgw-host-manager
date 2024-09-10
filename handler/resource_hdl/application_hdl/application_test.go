@@ -230,58 +230,6 @@ func TestHandler_Get(t *testing.T) {
 	}
 }
 
-func TestStorageReadAndWrite(t *testing.T) {
-	tmpFilePath := path.Join(t.TempDir(), "test.json")
-	testApps := map[string]model.HostApplication{
-		"123": {
-			ID: "123",
-			HostApplicationBase: model.HostApplicationBase{
-				Name:   "Test Name",
-				Socket: "test/socket",
-			},
-		},
-	}
-	t.Run("read file does not exist", func(t *testing.T) {
-		_, err := readStoFile(tmpFilePath)
-		if err == nil {
-			t.Error("error should not be nil")
-		}
-	})
-	t.Run("write file does not exist", func(t *testing.T) {
-		err := writeStoFile(map[string]model.HostApplication{}, tmpFilePath, true)
-		if err != nil {
-			t.Error(err)
-		}
-		_, err = os.Stat(tmpFilePath)
-		if err != nil {
-			t.Error(err)
-		}
-		_, err = os.Stat(tmpFilePath + ".bk")
-		if err == nil {
-			t.Error("error should not be nil")
-		}
-	})
-	t.Run("write file exists", func(t *testing.T) {
-		err := writeStoFile(testApps, tmpFilePath, true)
-		if err != nil {
-			t.Error(err)
-		}
-		_, err = os.Stat(tmpFilePath + ".bk")
-		if err != nil {
-			t.Error(err)
-		}
-	})
-	t.Run("read file exists", func(t *testing.T) {
-		apps, err := readStoFile(tmpFilePath)
-		if err != nil {
-			t.Error(err)
-		}
-		if !reflect.DeepEqual(testApps, apps) {
-			t.Errorf("got %+v, expected %+v", apps, testApps)
-		}
-	})
-}
-
 func TestStorageMigration(t *testing.T) {
 	tmpFilePath := path.Join(t.TempDir(), "test.json")
 	oldFmt := []model.HostApplicationBase{
