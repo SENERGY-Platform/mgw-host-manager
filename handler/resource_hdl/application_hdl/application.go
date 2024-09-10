@@ -31,18 +31,20 @@ import (
 )
 
 type Handler struct {
-	apps map[string]model.HostApplication
-	path string
-	mu   sync.RWMutex
+	apps       map[string]model.HostApplication
+	path       string
+	dockerPath string
+	mu         sync.RWMutex
 }
 
-func New(p string) (*Handler, error) {
+func New(p, dockerSocket string) (*Handler, error) {
 	if !path.IsAbs(p) {
 		return nil, fmt.Errorf("path '%s' not absolute", p)
 	}
 	return &Handler{
-		path: p,
-		apps: make(map[string]model.HostApplication),
+		path:       p,
+		apps:       make(map[string]model.HostApplication),
+		dockerPath: dockerSocket,
 	}, nil
 }
 
@@ -80,6 +82,12 @@ func (h *Handler) List(_ context.Context) ([]model.HostApplication, error) {
 }
 
 func (h *Handler) Add(_ context.Context, appResBase model.HostApplicationBase) (string, error) {
+	if !path.IsAbs(appResBase.Socket) {
+		return "", model.NewInvalidInputError(fmt.Errorf("path '%s' not absolute", appResBase.Socket))
+	}
+	if appResBase.Socket == h.dockerPath {
+		return "", model.NewInvalidInputError(errors.New("socket not allowed"))
+	}
 	h.mu.Lock()
 	defer h.mu.Unlock()
 	idObj, err := uuid.NewUUID()

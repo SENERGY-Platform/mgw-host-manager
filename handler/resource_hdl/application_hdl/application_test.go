@@ -31,7 +31,7 @@ import (
 func TestHandler_Init(t *testing.T) {
 	tmpFilePath := path.Join(t.TempDir(), "test.json")
 	t.Run("file does not exist", func(t *testing.T) {
-		h, err := New(tmpFilePath)
+		h, err := New(tmpFilePath, "")
 		if err != nil {
 			t.Error(err)
 		}
@@ -40,11 +40,11 @@ func TestHandler_Init(t *testing.T) {
 		}
 	})
 	apps := map[string]model.HostApplication{
-		util.GenHash("test/socket1"): {
-			ID: util.GenHash("test/socket1"),
+		util.GenHash("/test/socket1"): {
+			ID: util.GenHash("/test/socket1"),
 			HostApplicationBase: model.HostApplicationBase{
 				Name:   "Test 1",
-				Socket: "test/socket1",
+				Socket: "/test/socket1",
 			},
 		},
 	}
@@ -52,7 +52,7 @@ func TestHandler_Init(t *testing.T) {
 		oldFmt := []model.HostApplicationBase{
 			{
 				Name:   "Test 1",
-				Socket: "test/socket1",
+				Socket: "/test/socket1",
 			},
 		}
 		f, err := os.Create(tmpFilePath)
@@ -64,7 +64,7 @@ func TestHandler_Init(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		h, err := New(tmpFilePath)
+		h, err := New(tmpFilePath, "")
 		if err != nil {
 			t.Error(err)
 		}
@@ -76,7 +76,7 @@ func TestHandler_Init(t *testing.T) {
 		}
 	})
 	t.Run("file exists", func(t *testing.T) {
-		h, err := New(tmpFilePath)
+		h, err := New(tmpFilePath, "")
 		if err != nil {
 			t.Error(err)
 		}
@@ -93,7 +93,7 @@ func TestHandler_Init(t *testing.T) {
 			t.Fatal(err)
 		}
 		defer f.Close()
-		h, err := New(tmpFilePath)
+		h, err := New(tmpFilePath, "")
 		if err != nil {
 			t.Error(err)
 		}
@@ -104,7 +104,7 @@ func TestHandler_Init(t *testing.T) {
 }
 
 func TestHandler_List(t *testing.T) {
-	h, err := New(path.Join(t.TempDir(), "test.json"))
+	h, err := New(path.Join(t.TempDir(), "test.json"), "")
 	if err != nil {
 		t.Error(err)
 	}
@@ -121,14 +121,14 @@ func TestHandler_List(t *testing.T) {
 		ID: "123",
 		HostApplicationBase: model.HostApplicationBase{
 			Name:   "Test 1",
-			Socket: "test/socket1",
+			Socket: "/test/socket1",
 		},
 	}
 	a := []model.HostApplication{{
 		ID: "123",
 		HostApplicationBase: model.HostApplicationBase{
 			Name:   "Test 1",
-			Socket: "test/socket1",
+			Socket: "/test/socket1",
 		},
 	},
 	}
@@ -142,13 +142,13 @@ func TestHandler_List(t *testing.T) {
 }
 
 func TestHandler_Add(t *testing.T) {
-	h, err := New(path.Join(t.TempDir(), "test.json"))
+	h, err := New(path.Join(t.TempDir(), "test.json"), "")
 	if err != nil {
 		t.Error(err)
 	}
 	id, err := h.Add(context.Background(), model.HostApplicationBase{
 		Name:   "Test",
-		Socket: "test/socket",
+		Socket: "/test/socket",
 	})
 	if err != nil {
 		t.Error(err)
@@ -157,7 +157,7 @@ func TestHandler_Add(t *testing.T) {
 		ID: id,
 		HostApplicationBase: model.HostApplicationBase{
 			Name:   "Test",
-			Socket: "test/socket",
+			Socket: "/test/socket",
 		},
 	}
 	b, ok := h.apps[id]
@@ -170,7 +170,7 @@ func TestHandler_Add(t *testing.T) {
 }
 
 func TestHandler_Remove(t *testing.T) {
-	h, err := New(path.Join(t.TempDir(), "test.json"))
+	h, err := New(path.Join(t.TempDir(), "test.json"), "")
 	if err != nil {
 		t.Error(err)
 	}
@@ -195,7 +195,7 @@ func TestHandler_Remove(t *testing.T) {
 }
 
 func TestHandler_Get(t *testing.T) {
-	h, err := New(path.Join(t.TempDir(), "test.json"))
+	h, err := New(path.Join(t.TempDir(), "test.json"), "")
 	if err != nil {
 		t.Error(err)
 	}
@@ -212,13 +212,13 @@ func TestHandler_Get(t *testing.T) {
 		ID: "123",
 		HostApplicationBase: model.HostApplicationBase{
 			Name:   "Test 1",
-			Socket: "test/socket1",
+			Socket: "/test/socket1",
 		},
 	}
 	a := map[string]model.HostResourceBase{
 		"123": {
 			Name: "Test 1",
-			Path: "test/socket1",
+			Path: "/test/socket1",
 		},
 	}
 	b, err := h.Get(context.Background())
@@ -235,26 +235,26 @@ func TestStorageMigration(t *testing.T) {
 	oldFmt := []model.HostApplicationBase{
 		{
 			Name:   "Test 1",
-			Socket: "test/socket1",
+			Socket: "/test/socket1",
 		},
 		{
 			Name:   "Test 2",
-			Socket: "test/socket2",
+			Socket: "/test/socket2",
 		},
 	}
 	newFmt := map[string]model.HostApplication{
-		util.GenHash("test/socket1"): {
-			ID: util.GenHash("test/socket1"),
+		util.GenHash("/test/socket1"): {
+			ID: util.GenHash("/test/socket1"),
 			HostApplicationBase: model.HostApplicationBase{
 				Name:   "Test 1",
-				Socket: "test/socket1",
+				Socket: "/test/socket1",
 			},
 		},
-		util.GenHash("test/socket2"): {
-			ID: util.GenHash("test/socket2"),
+		util.GenHash("/test/socket2"): {
+			ID: util.GenHash("/test/socket2"),
 			HostApplicationBase: model.HostApplicationBase{
 				Name:   "Test 2",
-				Socket: "test/socket2",
+				Socket: "/test/socket2",
 			},
 		},
 	}
