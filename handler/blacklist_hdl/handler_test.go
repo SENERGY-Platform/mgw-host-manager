@@ -38,10 +38,7 @@ func TestHandler_Init(t *testing.T) {
 			t.Error(err)
 		}
 	})
-	values := map[string]struct{}{
-		"a": {},
-		"b": {},
-	}
+	values := []string{"a", "b"}
 	t.Run("file exists", func(t *testing.T) {
 		f, err := os.Create(tmpFilePath)
 		if err != nil {
@@ -93,7 +90,7 @@ func TestHandler_List(t *testing.T) {
 			t.Error("expected empty list")
 		}
 	})
-	h.values["a"] = struct{}{}
+	h.values = append(h.values, "a")
 	a := []string{"a"}
 	b, err := h.List(context.Background())
 	if err != nil {
@@ -114,9 +111,8 @@ func TestHandler_Add(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	_, ok := h.values[val]
-	if !ok {
-		t.Error("id not in map")
+	if !inSlice(val, h.values) {
+		t.Error("value not in list")
 	}
 	t.Run("error", func(t *testing.T) {
 		err = h.Add(context.Background(), val)
@@ -146,7 +142,7 @@ func TestHandler_Remove(t *testing.T) {
 			t.Error("expected NotFoundError")
 		}
 	})
-	h.values[val] = struct{}{}
+	h.values = append(h.values, val)
 	err = h.Remove(context.Background(), val)
 	if err != nil {
 		t.Error(err)

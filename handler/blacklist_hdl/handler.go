@@ -28,7 +28,7 @@ import (
 )
 
 type Handler struct {
-	values map[string]struct{}
+	values []string
 	path   string
 	mu     sync.RWMutex
 }
@@ -38,8 +38,7 @@ func New(p string) (*Handler, error) {
 		return nil, fmt.Errorf("path '%s' not absolute", p)
 	}
 	return &Handler{
-		values: make(map[string]struct{}),
-		path:   p,
+		path: p,
 	}, nil
 }
 
@@ -51,9 +50,7 @@ func (h *Handler) Init() error {
 		}
 		return err
 	}
-	for _, value := range values {
-		h.values[value] = struct{}{}
-	}
+	h.values = values
 	return nil
 }
 
@@ -61,7 +58,7 @@ func (h *Handler) List(_ context.Context) ([]string, error) {
 	h.mu.RLock()
 	defer h.mu.RUnlock()
 	var values []string
-	for val := range h.values {
+	for _, val := range h.values {
 		values = append(values, val)
 	}
 	return values, nil
@@ -70,27 +67,31 @@ func (h *Handler) List(_ context.Context) ([]string, error) {
 func (h *Handler) Add(_ context.Context, v string) error {
 	h.mu.Lock()
 	defer h.mu.Unlock()
-	if _, ok := h.values[v]; ok {
+	if inSlice(v, h.values) {
 		return model.NewInvalidInputError(fmt.Errorf("value '%s' already in list", v))
 	}
-	h.values[v] = struct{}{}
-	if err := json_sto_file.Write(h.values, h.path, true); err != nil {
-		delete(h.values, v)
+	var newValues []string
+	for _, val := range h.values {
+		newValues = append(newValues, val)
+	}
+	newValues = append(newValues, v)
+	if err := json_sto_file.Write(newValues, h.path, true); err != nil {
 		return model.NewInternalError(err)
 	}
+	h.values = newValues
 	return nil
 }
 
 func (h *Handler) Remove(_ context.Context, v string) error {
 	h.mu.Lock()
 	defer h.mu.Unlock()
-	if _, ok := h.values[v]; !ok {
+	if !inSlice(v, h.values) {
 		return model.NewNotFoundError(fmt.Errorf("value '%s' not in list", v))
 	}
-	newValues := make(map[string]struct{})
-	for val := range h.values {
+	var newValues []string
+	for _, val := range h.values {
 		if val != v {
-			newValues[val] = struct{}{}
+			newValues = append(newValues, val)
 		}
 	}
 	if err := json_sto_file.Write(newValues, h.path, true); err != nil {
@@ -100,9 +101,11 @@ func (h *Handler) Remove(_ context.Context, v string) error {
 	return nil
 }
 
-func (h *Handler) Has(_ context.Context, v string) (ok bool, err error) {
-	h.mu.RLock()
-	defer h.mu.RUnlock()
-	_, ok = h.values[v]
-	return
+func inSlice(v string, sl []string) bool {
+	for _, s := range sl {
+		if v == s {
+			return true
+		}
+	}
+	return false
 }
