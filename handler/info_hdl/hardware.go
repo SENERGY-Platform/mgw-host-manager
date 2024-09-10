@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 InfAI (CC SES)
+ * Copyright 2024 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,12 @@
 
 package info_hdl
 
-import (
-	"net"
-)
+import "context"
 
-type Handler struct {
-	netInterfaceBlacklist []string
-	netRangeBlacklist     []*net.IPNet
+func (h *Handler) GetCPU(ctx context.Context) error {
+	panic("not implemented")
 }
 
-func New(netInterfaceBlacklist []string, netRangeBlacklist []string) (*Handler, error) {
-	ipNets, err := genIPNets(netRangeBlacklist)
-	if err != nil {
-		return nil, err
-	}
-	return &Handler{
-		netInterfaceBlacklist: netInterfaceBlacklist,
-		netRangeBlacklist:     ipNets,
-	}, nil
+func (h *Handler) GetRAM(ctx context.Context) error {
+	panic("not implemented")
 }
