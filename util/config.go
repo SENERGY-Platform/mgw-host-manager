@@ -43,13 +43,16 @@ type LoggerConfig struct {
 }
 
 type Config struct {
-	Logger           LoggerConfig `json:"logger" env_var:"LOGGER_CONFIG"`
-	Socket           SocketConfig `json:"socket" env_var:"SOCKET_CONFIG"`
-	NetItfBlacklist  []string     `json:"net_itf_blacklist" env_var:"NET_ITF_BLACKLIST"`
-	NetRngBlacklist  []string     `json:"net_rng_blacklist" env_var:"NET_RNG_BLACKLIST"`
-	SerialDevicePath string       `json:"serial_device_path" env_var:"SERIAL_DEVICE_PATH"`
-	ApplicationsPath string       `json:"applications_path" env_var:"APPLICATIONS_PATH"`
-	CoreID           string       `json:"core_id" env_var:"CORE_ID"`
+	Logger              LoggerConfig `json:"logger" env_var:"LOGGER_CONFIG"`
+	Socket              SocketConfig `json:"socket" env_var:"SOCKET_CONFIG"`
+	NetItfBlacklist     []string     `json:"net_itf_blacklist" env_var:"NET_ITF_BLACKLIST"`
+	NetRngBlacklist     []string     `json:"net_rng_blacklist" env_var:"NET_RNG_BLACKLIST"`
+	NetItfBlacklistPath string       `json:"net_itf_blacklist_path" env_var:"NET_ITF_BLACKLIST_PATH"`
+	NetRngBlacklistPath string       `json:"net_rng_blacklist_path" env_var:"NET_RNG_BLACKLIST_PATH"`
+	SerialDevicePath    string       `json:"serial_device_path" env_var:"SERIAL_DEVICE_PATH"`
+	ApplicationsPath    string       `json:"applications_path" env_var:"APPLICATIONS_PATH"`
+	DockerSocketPath    string       `json:"docker_socket_path" env_var:"DOCKER_SOCKET_PATH"`
+	CoreID              string       `json:"core_id" env_var:"CORE_ID"`
 }
 
 func NewConfig(path string) (*Config, error) {
@@ -67,6 +70,7 @@ func NewConfig(path string) (*Config, error) {
 			FileMode: 0660,
 		},
 		SerialDevicePath: "/dev/serial/by-id",
+		DockerSocketPath: "/var/run/docker.sock",
 	}
 	err := config_hdl.Load(&cfg, nil, map[reflect.Type]envldr.Parser{reflect.TypeOf(level.Off): sb_logger.LevelParser}, nil, path)
 	return &cfg, err
