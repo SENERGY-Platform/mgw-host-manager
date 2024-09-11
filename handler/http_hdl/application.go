@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 InfAI (CC SES)
+ * Copyright 2024 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,62 +23,7 @@ import (
 	"net/http"
 )
 
-const (
-	hostResIdParam = "r"
-	hostAppIdParam = "a"
-)
-
-type hostResourcesQuery struct {
-}
-
-func getHostInfoH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
-		hostInfo, err := a.GetHostInfo(gc.Request.Context())
-		if err != nil {
-			_ = gc.Error(err)
-			return
-		}
-		gc.JSON(http.StatusOK, hostInfo)
-	}
-}
-
-func getHostNetH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
-		hostNet, err := a.GetHostNet(gc.Request.Context())
-		if err != nil {
-			_ = gc.Error(err)
-			return
-		}
-		gc.JSON(http.StatusOK, hostNet)
-	}
-}
-
-func getHostResourcesH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
-		query := hostResourcesQuery{}
-		if err := gc.ShouldBindQuery(&query); err != nil {
-			_ = gc.Error(model.NewInvalidInputError(err))
-			return
-		}
-		resources, err := a.ListHostResources(gc.Request.Context(), model.HostResourceFilter{})
-		if err != nil {
-			_ = gc.Error(err)
-			return
-		}
-		gc.JSON(http.StatusOK, resources)
-	}
-}
-
-func getHostResourceH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
-		resource, err := a.GetHostResource(gc.Request.Context(), gc.Param(hostResIdParam))
-		if err != nil {
-			_ = gc.Error(err)
-			return
-		}
-		gc.JSON(http.StatusOK, resource)
-	}
-}
+const hostAppIdParam = "a"
 
 func getHostApplicationsH(a lib.Api) gin.HandlerFunc {
 	return func(gc *gin.Context) {
@@ -116,11 +61,5 @@ func deleteHostApplicationH(a lib.Api) gin.HandlerFunc {
 			return
 		}
 		gc.Status(http.StatusOK)
-	}
-}
-
-func getSrvInfoH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
-		gc.JSON(http.StatusOK, a.GetSrvInfo(gc.Request.Context()))
 	}
 }
