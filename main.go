@@ -104,7 +104,7 @@ func main() {
 		return
 	}
 
-	hostAppHdl, err := application_hdl.New(config.ApplicationsPath, config.DockerSocketPath)
+	hostAppHdl, err := application_hdl.New(config.ApplicationsPath, config.AppSocketBlacklist)
 	if err != nil {
 		util.Logger.Error(err)
 		ec = 1
