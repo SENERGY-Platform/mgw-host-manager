@@ -48,7 +48,7 @@ func GetRoutes(e *gin.Engine) [][2]string {
 func setHostApplicationsRoutes(a lib.Api, rg *gin.RouterGroup) {
 	rg.GET(model.HostAppsPath, getHostApplicationsH(a))
 	rg.POST(model.HostAppsPath, postHostApplicationH(a))
-	rg.DELETE(model.HostAppsPath, deleteHostApplicationH(a))
+	rg.DELETE(model.HostAppsPath+"/:"+hostAppIdParam, deleteHostApplicationH(a))
 }
 
 func setHostResourcesRoutes(a lib.Api, rGroups ...*gin.RouterGroup) {
