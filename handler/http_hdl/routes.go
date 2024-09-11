@@ -30,6 +30,7 @@ func SetRoutes(e *gin.Engine, a lib.Api) {
 	setHostInfoRoutes(a, standardGrp, restrictedGrp)
 	setHostResourcesRoutes(a, standardGrp, restrictedGrp)
 	setHostApplicationsRoutes(a, standardGrp)
+	setBlacklistRoutes(a, standardGrp.Group(model.BlacklistsPath))
 }
 
 func GetRoutes(e *gin.Engine) [][2]string {
@@ -62,6 +63,15 @@ func setHostInfoRoutes(a lib.Api, rGroups ...*gin.RouterGroup) {
 		rg.GET(model.HostInfoPath, getHostInfoH(a))
 		rg.GET(model.HostInfoPath+"/"+model.HostNetPath, getHostNetH(a))
 	}
+}
+
+func setBlacklistRoutes(a lib.Api, rg *gin.RouterGroup) {
+	rg.GET(model.NetInterfaces, getNetItfBlacklistH(a))
+	rg.POST(model.NetInterfaces, postNetItfBlacklistValueH(a))
+	rg.DELETE(model.NetInterfaces, deleteNetItfBlacklistValueH(a))
+	rg.GET(model.NetRanges, getNetRngBlacklistH(a))
+	rg.POST(model.NetRanges, postNetRngBlacklistValueH(a))
+	rg.DELETE(model.NetRanges, deleteNetRngBlacklistValueH(a))
 }
 
 func setSrvInfoRoutes(a lib.Api, rGroups ...*gin.RouterGroup) {
