@@ -81,7 +81,7 @@ func main() {
 	watchdog.Logger = util.Logger
 	wtchdg := watchdog.New(syscall.SIGINT, syscall.SIGTERM)
 
-	netInterfaceBlacklistHdl, err := blacklist_hdl.New(config.NetItfBlacklistPath)
+	netInterfaceBlacklistHdl, err := blacklist_hdl.New(config.Blacklist.NetInterfaceListPath)
 	if err != nil {
 		util.Logger.Error(err)
 		ec = 1
@@ -89,7 +89,7 @@ func main() {
 	}
 	netInterfaceBlacklistHdl.SetValidationFunc(info_hdl.ValidateNetItfName)
 
-	netRangeBlacklistHdl, err := blacklist_hdl.New(config.NetRngBlacklistPath)
+	netRangeBlacklistHdl, err := blacklist_hdl.New(config.Blacklist.NetRangeListPath)
 	if err != nil {
 		util.Logger.Error(err)
 		ec = 1
@@ -97,14 +97,14 @@ func main() {
 	}
 	netRangeBlacklistHdl.SetValidationFunc(info_hdl.ValidateCIDR)
 
-	hostInfoHdl, err := info_hdl.New(config.NetItfBlacklist, config.NetRngBlacklist, netInterfaceBlacklistHdl, netRangeBlacklistHdl)
+	hostInfoHdl, err := info_hdl.New(config.Blacklist.NetInterfaceList, config.Blacklist.NetRangeList, netInterfaceBlacklistHdl, netRangeBlacklistHdl)
 	if err != nil {
 		util.Logger.Error(err)
 		ec = 1
 		return
 	}
 
-	hostAppHdl, err := application_hdl.New(config.ApplicationsPath, config.AppSocketBlacklist)
+	hostAppHdl, err := application_hdl.New(config.ApplicationsPath, config.Blacklist.AppSocketList)
 	if err != nil {
 		util.Logger.Error(err)
 		ec = 1

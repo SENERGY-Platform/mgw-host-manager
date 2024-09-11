@@ -42,17 +42,21 @@ type LoggerConfig struct {
 	Prefix       string      `json:"prefix" env_var:"LOGGER_PREFIX"`
 }
 
+type BlacklistConfig struct {
+	NetInterfaceList     []string `json:"net_interface_list" env_var:"BLACKLIST_NET_INTERFACE_LIST"`
+	NetRangeList         []string `json:"net_range_list" env_var:"BLACKLIST_NET_RANGE_LIST"`
+	AppSocketList        []string `json:"app_socket_list" env_var:"BLACKLIST_APP_SOCKET_LIST"`
+	NetInterfaceListPath string   `json:"net_interface_list_path" env_var:"BLACKLIST_NET_INTERFACE_LIST_PATH"`
+	NetRangeListPath     string   `json:"net_range_list_path" env_var:"BLACKLIST_NET_RANGE_LIST_PATH"`
+}
+
 type Config struct {
-	Logger              LoggerConfig `json:"logger" env_var:"LOGGER_CONFIG"`
-	Socket              SocketConfig `json:"socket" env_var:"SOCKET_CONFIG"`
-	NetItfBlacklist     []string     `json:"net_itf_blacklist" env_var:"NET_ITF_BLACKLIST"`
-	NetRngBlacklist     []string     `json:"net_rng_blacklist" env_var:"NET_RNG_BLACKLIST"`
-	NetItfBlacklistPath string       `json:"net_itf_blacklist_path" env_var:"NET_ITF_BLACKLIST_PATH"`
-	NetRngBlacklistPath string       `json:"net_rng_blacklist_path" env_var:"NET_RNG_BLACKLIST_PATH"`
-	SerialDevicePath    string       `json:"serial_device_path" env_var:"SERIAL_DEVICE_PATH"`
-	ApplicationsPath    string       `json:"applications_path" env_var:"APPLICATIONS_PATH"`
-	AppSocketBlacklist  []string     `json:"app_socket_blacklist" env_var:"APP_SOCKET_BLACKLIST"`
-	CoreID              string       `json:"core_id" env_var:"CORE_ID"`
+	Logger           LoggerConfig    `json:"logger" env_var:"LOGGER_CONFIG"`
+	Socket           SocketConfig    `json:"socket" env_var:"SOCKET_CONFIG"`
+	Blacklist        BlacklistConfig `json:"blacklist" env_var:"BLACKLIST_CONFIG"`
+	SerialDevicePath string          `json:"serial_device_path" env_var:"SERIAL_DEVICE_PATH"`
+	ApplicationsPath string          `json:"applications_path" env_var:"APPLICATIONS_PATH"`
+	CoreID           string          `json:"core_id" env_var:"CORE_ID"`
 }
 
 func NewConfig(path string) (*Config, error) {
