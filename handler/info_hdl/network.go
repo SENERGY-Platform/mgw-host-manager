@@ -18,6 +18,7 @@ package info_hdl
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"net"
@@ -130,6 +131,13 @@ func ValidateCIDR(v string) error {
 	_, _, err := net.ParseCIDR(v)
 	if err != nil {
 		return err
+	}
+	return nil
+}
+
+func ValidateNetItfName(v string) error {
+	if v == "" {
+		return errors.New("empty value")
 	}
 	return nil
 }

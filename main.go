@@ -87,6 +87,7 @@ func main() {
 		ec = 1
 		return
 	}
+	netInterfaceBlacklistHdl.SetValidationFunc(info_hdl.ValidateNetItfName)
 
 	netRangeBlacklistHdl, err := blacklist_hdl.New(config.NetRngBlacklistPath)
 	if err != nil {
