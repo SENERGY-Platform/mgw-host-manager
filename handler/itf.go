@@ -19,6 +19,7 @@ package handler
 import (
 	"context"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+	"time"
 )
 
 type HostInfoHandler interface {
@@ -43,4 +44,8 @@ type BlacklistHandler interface {
 	List(ctx context.Context) ([]string, error)
 	Add(ctx context.Context, v string) error
 	Remove(ctx context.Context, v string) error
+}
+
+type MDNSDiscoveryHandler interface {
+	Query(ctx context.Context, service, domain string, window time.Duration) ([]model.MDNSEntry, error)
 }
