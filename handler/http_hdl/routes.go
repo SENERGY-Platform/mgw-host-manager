@@ -30,6 +30,7 @@ func SetRoutes(e *gin.Engine, a lib.Api) {
 	setHostInfoRoutes(a, standardGrp, restrictedGrp)
 	setHostResourcesRoutes(a, standardGrp, restrictedGrp)
 	setHostApplicationsRoutes(a, standardGrp)
+	setMDNSRoutes(a, restrictedGrp)
 	setBlacklistRoutes(a, standardGrp.Group(model.BlacklistsPath))
 }
 
@@ -72,6 +73,10 @@ func setBlacklistRoutes(a lib.Api, rg *gin.RouterGroup) {
 	rg.GET(model.NetRangesPath, getNetRngBlacklistH(a))
 	rg.POST(model.NetRangesPath, postNetRngBlacklistValueH(a))
 	rg.DELETE(model.NetRangesPath, deleteNetRngBlacklistValueH(a))
+}
+
+func setMDNSRoutes(a lib.Api, rg *gin.RouterGroup) {
+	rg.GET(model.MDNSDiscoveryPath, getMDNSQueryH(a))
 }
 
 func setSrvInfoRoutes(a lib.Api, rGroups ...*gin.RouterGroup) {
