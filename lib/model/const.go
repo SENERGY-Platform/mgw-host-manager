@@ -34,6 +34,7 @@ const (
 	BlacklistsPath    = "blacklists"
 	NetInterfaces     = "net-interfaces"
 	NetRanges         = "net-ranges"
+	MDNSDiscovery     = "mdns-discovery"
 )
 
 const (
