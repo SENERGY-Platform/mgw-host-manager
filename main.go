@@ -29,6 +29,7 @@ import (
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/blacklist_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/http_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/info_hdl"
+	"github.com/SENERGY-Platform/mgw-host-manager/handler/mdns_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/resource_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/resource_hdl/application_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/resource_hdl/serial_hdl"
@@ -122,7 +123,7 @@ func main() {
 	})
 	util.Logger.Debugf("resource handlers: %s", sb_util.ToJsonStr(hostResourceHdl.Handlers()))
 
-	mApi := api.New(hostInfoHdl, hostResourceHdl, hostAppHdl, netInterfaceBlacklistHdl, netRangeBlacklistHdl, srvInfoHdl)
+	mApi := api.New(hostInfoHdl, hostResourceHdl, hostAppHdl, netInterfaceBlacklistHdl, netRangeBlacklistHdl, mdns_hdl.New(), srvInfoHdl)
 
 	gin.SetMode(gin.ReleaseMode)
 	httpHandler := gin.New()

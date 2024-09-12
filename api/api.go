@@ -22,6 +22,7 @@ import (
 	srv_info_lib "github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+	"time"
 )
 
 type Api struct {
@@ -30,16 +31,18 @@ type Api struct {
 	hostAppHdl         handler.HostApplicationHandler
 	netItfBlacklistHdl handler.BlacklistHandler
 	netRngBlacklistHdl handler.BlacklistHandler
+	mdnsDiscoveryHdl   handler.MDNSDiscoveryHandler
 	srvInfoHdl         srv_info_hdl.SrvInfoHandler
 }
 
-func New(hostInfoHandler handler.HostInfoHandler, hostResourceHandler handler.HostResourceHandler, hostAppHdl handler.HostApplicationHandler, netItfBlacklistHdl, netRngBlacklistHdl handler.BlacklistHandler, srvInfoHandler srv_info_hdl.SrvInfoHandler) *Api {
+func New(hostInfoHandler handler.HostInfoHandler, hostResourceHandler handler.HostResourceHandler, hostAppHdl handler.HostApplicationHandler, netItfBlacklistHdl, netRngBlacklistHdl handler.BlacklistHandler, mdnsDiscoveryHdl handler.MDNSDiscoveryHandler, srvInfoHandler srv_info_hdl.SrvInfoHandler) *Api {
 	return &Api{
 		hostInfoHdl:        hostInfoHandler,
 		hostResourceHdl:    hostResourceHandler,
 		hostAppHdl:         hostAppHdl,
 		netItfBlacklistHdl: netItfBlacklistHdl,
 		netRngBlacklistHdl: netRngBlacklistHdl,
+		mdnsDiscoveryHdl:   mdnsDiscoveryHdl,
 		srvInfoHdl:         srvInfoHandler,
 	}
 }
@@ -104,6 +107,10 @@ func (a *Api) NetRngBlacklistAdd(ctx context.Context, v string) error {
 
 func (a *Api) NetRngBlacklistRemove(ctx context.Context, v string) error {
 	return a.netRngBlacklistHdl.Remove(ctx, v)
+}
+
+func (a *Api) MDNSQueryService(ctx context.Context, service, domain string, window time.Duration) ([]model.MDNSEntry, error) {
+	return a.mdnsDiscoveryHdl.Query(ctx, service, domain, window)
 }
 
 func (a *Api) GetSrvInfo(_ context.Context) srv_info_lib.SrvInfo {
