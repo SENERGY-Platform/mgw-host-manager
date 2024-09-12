@@ -32,9 +32,9 @@ const (
 	RestrictedPath    = "restricted"
 	HostAppsPath      = "applications"
 	BlacklistsPath    = "blacklists"
-	NetInterfaces     = "net-interfaces"
-	NetRanges         = "net-ranges"
-	MDNSDiscovery     = "mdns-discovery"
+	NetInterfacesPath = "net-interfaces"
+	NetRangesPath     = "net-ranges"
+	MDNSDiscoveryPath = "mdns-discovery"
 )
 
 const (
