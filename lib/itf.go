@@ -20,6 +20,7 @@ import (
 	"context"
 	srv_info_lib "github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+	"time"
 )
 
 type Api interface {
@@ -36,5 +37,6 @@ type Api interface {
 	GetNetRngBlacklist(ctx context.Context) ([]string, error)
 	NetRngBlacklistAdd(ctx context.Context, v string) error
 	NetRngBlacklistRemove(ctx context.Context, v string) error
+	MDNSQueryService(ctx context.Context, service, domain string, window time.Duration) ([]model.MDNSEntry, error)
 	srv_info_lib.Api
 }
