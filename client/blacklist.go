@@ -27,7 +27,7 @@ import (
 )
 
 func (c *Client) GetNetItfBlacklist(ctx context.Context) ([]string, error) {
-	u, err := url.JoinPath(c.baseUrl, model.BlacklistsPath, model.NetInterfaces)
+	u, err := url.JoinPath(c.baseUrl, model.BlacklistsPath, model.NetInterfacesPath)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ func (c *Client) GetNetItfBlacklist(ctx context.Context) ([]string, error) {
 }
 
 func (c *Client) NetItfBlacklistAdd(ctx context.Context, v string) error {
-	u, err := url.JoinPath(c.baseUrl, model.BlacklistsPath, model.NetInterfaces)
+	u, err := url.JoinPath(c.baseUrl, model.BlacklistsPath, model.NetInterfacesPath)
 	if err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func (c *Client) NetItfBlacklistAdd(ctx context.Context, v string) error {
 }
 
 func (c *Client) NetItfBlacklistRemove(ctx context.Context, v string) error {
-	u, err := url.JoinPath(c.baseUrl, model.BlacklistsPath, model.NetInterfaces)
+	u, err := url.JoinPath(c.baseUrl, model.BlacklistsPath, model.NetInterfacesPath)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func (c *Client) NetItfBlacklistRemove(ctx context.Context, v string) error {
 }
 
 func (c *Client) GetNetRngBlacklist(ctx context.Context) ([]string, error) {
-	u, err := url.JoinPath(c.baseUrl, model.BlacklistsPath, model.NetRanges)
+	u, err := url.JoinPath(c.baseUrl, model.BlacklistsPath, model.NetRangesPath)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func (c *Client) GetNetRngBlacklist(ctx context.Context) ([]string, error) {
 }
 
 func (c *Client) NetRngBlacklistAdd(ctx context.Context, v string) error {
-	u, err := url.JoinPath(c.baseUrl, model.BlacklistsPath, model.NetRanges)
+	u, err := url.JoinPath(c.baseUrl, model.BlacklistsPath, model.NetRangesPath)
 	if err != nil {
 		return err
 	}
@@ -105,7 +105,7 @@ func (c *Client) NetRngBlacklistAdd(ctx context.Context, v string) error {
 }
 
 func (c *Client) NetRngBlacklistRemove(ctx context.Context, v string) error {
-	u, err := url.JoinPath(c.baseUrl, model.BlacklistsPath, model.NetRanges)
+	u, err := url.JoinPath(c.baseUrl, model.BlacklistsPath, model.NetRangesPath)
 	if err != nil {
 		return err
 	}
