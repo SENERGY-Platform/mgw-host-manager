@@ -2,5 +2,5 @@ github.com/SENERGY-Platform/go-base-http-client v0.0.2 h1:sF4QDRkNjhnKQh6d8ujfxQ
 github.com/SENERGY-Platform/go-base-http-client v0.0.2/go.mod h1:NfKW/relIVTkMXhz4OqZlzJXYPQUYEKxwqou8D0B/Kw=
 github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib v0.0.2 h1:Bcdxt7i3DGGvlwS6U3NY9eGJjiPuv3ZpbMwebEUV+nE=
 github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib v0.0.2/go.mod h1:vcvyLaSoZsScGQ8K/OuJxlANTs5FPozsLvPzFUZgiVM=
-github.com/SENERGY-Platform/mgw-host-manager/lib v1.2.1 h1:DA58A2bX4joQSA8r/73yato7WJa5htZzIjeGUTtEZ9o=
-github.com/SENERGY-Platform/mgw-host-manager/lib v1.2.1/go.mod h1:SNd5TWoaX9xiEr0VHxMTK4X3GBvGQTdBtk2fbh65aBk=
+github.com/SENERGY-Platform/mgw-host-manager/lib v1.3.0 h1:irzz+l0d4nXfyTO61pkF7pyIc6QDcyMFz90dmjCDKW4=
+github.com/SENERGY-Platform/mgw-host-manager/lib v1.3.0/go.mod h1:SNd5TWoaX9xiEr0VHxMTK4X3GBvGQTdBtk2fbh65aBk=
