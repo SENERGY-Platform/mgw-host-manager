@@ -25,9 +25,9 @@ import (
 )
 
 type mdnsQuery struct {
-	Service    string `json:"service"`
-	Domain     string `json:"domain"`
-	TimeWindow int64  `json:"time_window"`
+	Service    string `form:"service"`
+	Domain     string `form:"domain"`
+	TimeWindow int64  `form:"time_window"`
 }
 
 func getMDNSQueryH(a lib.Api) gin.HandlerFunc {
