@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 InfAI (CC SES)
+ * Copyright 2025 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,38 +14,38 @@
  * limitations under the License.
  */
 
-package handler
+package manager
 
 import (
 	"context"
-	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+	lib_model "github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"time"
 )
 
 type HostInfoHandler interface {
-	GetNet(ctx context.Context) (model.HostNet, error)
+	GetNet(ctx context.Context) (lib_model.HostNet, error)
 	GetCPU(ctx context.Context) error
 	GetRAM(ctx context.Context) error
 	GetOS(ctx context.Context) error
 }
 
 type HostResourceHandler interface {
-	List(ctx context.Context, filter model.HostResourceFilter) ([]model.HostResource, error)
-	Get(ctx context.Context, rID string) (model.HostResource, error)
+	List(ctx context.Context, filter lib_model.HostResourceFilter) ([]lib_model.HostResource, error)
+	Get(ctx context.Context, rID string) (lib_model.HostResource, error)
 }
 
 type HostApplicationHandler interface {
-	List(ctx context.Context) ([]model.HostApplication, error)
-	Add(ctx context.Context, appResBase model.HostApplicationBase) (string, error)
+	List(ctx context.Context) ([]lib_model.HostApplication, error)
+	Add(ctx context.Context, appResBase lib_model.HostApplicationBase) (string, error)
 	Remove(ctx context.Context, aID string) error
+}
+
+type MDNSDiscoveryHandler interface {
+	Query(ctx context.Context, service, domain string, window time.Duration) ([]lib_model.MDNSEntry, error)
 }
 
 type BlacklistHandler interface {
 	List(ctx context.Context) ([]string, error)
 	Add(ctx context.Context, v string) error
 	Remove(ctx context.Context, v string) error
-}
-
-type MDNSDiscoveryHandler interface {
-	Query(ctx context.Context, service, domain string, window time.Duration) ([]model.MDNSEntry, error)
 }

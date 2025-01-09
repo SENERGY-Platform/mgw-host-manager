@@ -17,18 +17,17 @@
 package info_hdl
 
 import (
-	"github.com/SENERGY-Platform/mgw-host-manager/handler"
 	"net"
 )
 
 type Handler struct {
 	netInterfaceBlacklist    []string
-	netInterfaceBlacklistHdl handler.BlacklistHandler
+	netInterfaceBlacklistHdl BlacklistHandler
 	netRangeBlacklist        []*net.IPNet
-	netRangeBlacklistHdl     handler.BlacklistHandler
+	netRangeBlacklistHdl     BlacklistHandler
 }
 
-func New(netInterfaceBlacklist, netRangeBlacklist []string, netInterfaceBlacklistHdl, netRangeBlacklistHdl handler.BlacklistHandler) (*Handler, error) {
+func New(netInterfaceBlacklist, netRangeBlacklist []string, netInterfaceBlacklistHdl, netRangeBlacklistHdl BlacklistHandler) (*Handler, error) {
 	ipNets, err := genIPNets(netRangeBlacklist)
 	if err != nil {
 		return nil, err

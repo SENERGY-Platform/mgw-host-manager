@@ -25,7 +25,6 @@ import (
 	srv_info_hdl "github.com/SENERGY-Platform/go-service-base/srv-info-hdl"
 	sb_util "github.com/SENERGY-Platform/go-service-base/util"
 	"github.com/SENERGY-Platform/go-service-base/watchdog"
-	"github.com/SENERGY-Platform/mgw-host-manager/api"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/blacklist_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/http_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/info_hdl"
@@ -34,6 +33,7 @@ import (
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/resource_hdl/application_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/resource_hdl/serial_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+	"github.com/SENERGY-Platform/mgw-host-manager/manager"
 	"github.com/SENERGY-Platform/mgw-host-manager/util"
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
@@ -123,7 +123,7 @@ func main() {
 	})
 	util.Logger.Debugf("resource handlers: %s", sb_util.ToJsonStr(hostResourceHdl.Handlers()))
 
-	mApi := api.New(hostInfoHdl, hostResourceHdl, hostAppHdl, netInterfaceBlacklistHdl, netRangeBlacklistHdl, mdns_hdl.New(), srvInfoHdl)
+	hm := manager.New(hostInfoHdl, hostResourceHdl, hostAppHdl, netInterfaceBlacklistHdl, netRangeBlacklistHdl, mdns_hdl.New(), srvInfoHdl)
 
 	gin.SetMode(gin.ReleaseMode)
 	httpHandler := gin.New()
@@ -136,7 +136,7 @@ func main() {
 	}), gin_mw.ErrorHandler(util.GetStatusCode, ", "), gin.Recovery())
 	httpHandler.UseRawPath = true
 
-	http_hdl.SetRoutes(httpHandler, mApi)
+	http_hdl.SetRoutes(httpHandler, hm)
 	util.Logger.Debugf("routes: %s", sb_util.ToJsonStr(http_hdl.GetRoutes(httpHandler)))
 
 	listener, err := sb_util.NewUnixListener(config.Socket.Path, os.Getuid(), config.Socket.GroupID, config.Socket.FileMode)
