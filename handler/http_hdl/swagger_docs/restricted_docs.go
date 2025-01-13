@@ -19,62 +19,6 @@ const docTemplaterestricted = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/endpoints": {
-            "get": {
-                "description": "Query MDNS devices on attached networks.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "MDNS"
-                ],
-                "summary": "MDNS query",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "MDNS service string (e.g.: '_services._dns-sd._udp' for all available services)",
-                        "name": "service",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "limit the query to a domain",
-                        "name": "domain",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "set the maximum duration for the query (defaults to 1s)",
-                        "name": "time_window",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "list of services",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.MDNSEntry"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "error message",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "error message",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/host-info": {
             "get": {
                 "description": "Get host information.",
@@ -206,6 +150,62 @@ const docTemplaterestricted = `{
                         "description": "info",
                         "schema": {
                             "$ref": "#/definitions/lib.SrvInfo"
+                        }
+                    },
+                    "500": {
+                        "description": "error message",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/mdns-discovery": {
+            "get": {
+                "description": "Query MDNS devices on attached networks.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MDNS"
+                ],
+                "summary": "MDNS query",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "MDNS service string (e.g.: '_services._dns-sd._udp' for all available services)",
+                        "name": "service",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "limit the query to a domain",
+                        "name": "domain",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "set the maximum duration for the query (defaults to 1s)",
+                        "name": "time_window",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "list of services",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.MDNSEntry"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "error message",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     "500": {
@@ -369,16 +369,24 @@ const docTemplaterestricted = `{
         "time.Duration": {
             "type": "integer",
             "enum": [
+                -9223372036854775808,
+                9223372036854775807,
                 1,
                 1000,
                 1000000,
-                1000000000
+                1000000000,
+                60000000000,
+                3600000000000
             ],
             "x-enum-varnames": [
+                "minDuration",
+                "maxDuration",
                 "Nanosecond",
                 "Microsecond",
                 "Millisecond",
-                "Second"
+                "Second",
+                "Minute",
+                "Hour"
             ]
         }
     }

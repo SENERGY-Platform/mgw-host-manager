@@ -99,16 +99,24 @@ definitions:
     - Application
   time.Duration:
     enum:
+    - -9223372036854775808
+    - 9223372036854775807
     - 1
     - 1000
     - 1000000
     - 1000000000
+    - 60000000000
+    - 3600000000000
     type: integer
     x-enum-varnames:
+    - minDuration
+    - maxDuration
     - Nanosecond
     - Microsecond
     - Millisecond
     - Second
+    - Minute
+    - Hour
 info:
   contact: {}
   description: Provides access to selected host functions.
@@ -118,44 +126,6 @@ info:
   title: Host Manager restricted API
   version: 1.3.0
 paths:
-  /endpoints:
-    get:
-      description: Query MDNS devices on attached networks.
-      parameters:
-      - description: 'MDNS service string (e.g.: ''_services._dns-sd._udp'' for all
-          available services)'
-        in: query
-        name: service
-        required: true
-        type: string
-      - description: limit the query to a domain
-        in: query
-        name: domain
-        type: string
-      - description: set the maximum duration for the query (defaults to 1s)
-        in: query
-        name: time_window
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: list of services
-          schema:
-            items:
-              $ref: '#/definitions/model.MDNSEntry'
-            type: array
-        "400":
-          description: error message
-          schema:
-            type: string
-        "500":
-          description: error message
-          schema:
-            type: string
-      summary: MDNS query
-      tags:
-      - MDNS
   /host-info:
     get:
       description: Get host information.
@@ -249,4 +219,42 @@ paths:
       summary: Get stats
       tags:
       - Service Information
+  /mdns-discovery:
+    get:
+      description: Query MDNS devices on attached networks.
+      parameters:
+      - description: 'MDNS service string (e.g.: ''_services._dns-sd._udp'' for all
+          available services)'
+        in: query
+        name: service
+        required: true
+        type: string
+      - description: limit the query to a domain
+        in: query
+        name: domain
+        type: string
+      - description: set the maximum duration for the query (defaults to 1s)
+        in: query
+        name: time_window
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: list of services
+          schema:
+            items:
+              $ref: '#/definitions/model.MDNSEntry'
+            type: array
+        "400":
+          description: error message
+          schema:
+            type: string
+        "500":
+          description: error message
+          schema:
+            type: string
+      summary: MDNS query
+      tags:
+      - MDNS
 swagger: "2.0"
