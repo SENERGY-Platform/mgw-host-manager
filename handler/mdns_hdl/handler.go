@@ -19,7 +19,7 @@ package mdns_hdl
 import (
 	"context"
 	"errors"
-	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+	lib_model "github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"github.com/libp2p/zeroconf/v2"
 	"strings"
 	"time"
@@ -31,8 +31,8 @@ func New() *Handler {
 	return &Handler{}
 }
 
-func (h *Handler) Query(ctx context.Context, service, domain string, window time.Duration) ([]model.MDNSEntry, error) {
-	var entries []model.MDNSEntry
+func (h *Handler) Query(ctx context.Context, service, domain string, window time.Duration) ([]lib_model.MDNSEntry, error) {
+	var entries []lib_model.MDNSEntry
 	results := make(chan *zeroconf.ServiceEntry)
 	go func() {
 		for result := range results {
@@ -46,12 +46,12 @@ func (h *Handler) Query(ctx context.Context, service, domain string, window time
 		err = ctxWt.Err()
 	}
 	if err != nil && !errors.Is(err, context.DeadlineExceeded) {
-		return nil, err
+		return nil, lib_model.NewInternalError(err)
 	}
 	return entries, nil
 }
 
-func newMDNSEntry(se *zeroconf.ServiceEntry) model.MDNSEntry {
+func newMDNSEntry(se *zeroconf.ServiceEntry) lib_model.MDNSEntry {
 	var IPv4Addr string
 	if len(se.AddrIPv4) > 0 {
 		IPv4Addr = se.AddrIPv4[0].String()
@@ -61,7 +61,7 @@ func newMDNSEntry(se *zeroconf.ServiceEntry) model.MDNSEntry {
 	if len(hostnameParts) > 0 {
 		hostname = hostnameParts[0]
 	}
-	return model.MDNSEntry{
+	return lib_model.MDNSEntry{
 		Name:       se.Instance,
 		Type:       se.Service,
 		Subtypes:   se.Subtypes,
