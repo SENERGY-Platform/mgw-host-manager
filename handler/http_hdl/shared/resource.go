@@ -27,6 +27,14 @@ import (
 type hostResourcesQuery struct {
 }
 
+// GetHostResourcesH godoc
+// @Summary List resources
+// @Description	List host resources like application sockets or serial adapters.
+// @Tags Host Resources
+// @Produce	json
+// @Success	200 {array} lib_model.HostResource "host resources"
+// @Failure	500 {string} string "error message"
+// @Router /host-resources [get]
 func GetHostResourcesH(a lib.Api) (string, string, gin.HandlerFunc) {
 	return http.MethodGet, lib_model.HostResourcesPath, func(gc *gin.Context) {
 		query := hostResourcesQuery{}
@@ -43,6 +51,15 @@ func GetHostResourcesH(a lib.Api) (string, string, gin.HandlerFunc) {
 	}
 }
 
+// GetHostResourceH godoc
+// @Summary Get resource
+// @Description	Get a host resource.
+// @Tags Host Resources
+// @Produce	json
+// @Param id path string true "resource id"
+// @Success	200 {object} lib_model.HostResource "host resources"
+// @Failure	500 {string} string "error message"
+// @Router /host-resources/{id} [get]
 func GetHostResourceH(a lib.Api) (string, string, gin.HandlerFunc) {
 	return http.MethodGet, path.Join(lib_model.HostResourcesPath, ":id"), func(gc *gin.Context) {
 		resource, err := a.GetHostResource(gc.Request.Context(), gc.Param("id"))

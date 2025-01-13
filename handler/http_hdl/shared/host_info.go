@@ -24,6 +24,14 @@ import (
 	"path"
 )
 
+// GetHostInfoH godoc
+// @Summary Get all
+// @Description	Get host information.
+// @Tags Host Information
+// @Produce	json
+// @Success	200 {object} lib_model.HostInfo "host info"
+// @Failure	500 {string} string "error message"
+// @Router /host-info [get]
 func GetHostInfoH(a lib.Api) (string, string, gin.HandlerFunc) {
 	return http.MethodGet, lib_model.HostInfoPath, func(gc *gin.Context) {
 		hostInfo, err := a.GetHostInfo(gc.Request.Context())
@@ -35,6 +43,14 @@ func GetHostInfoH(a lib.Api) (string, string, gin.HandlerFunc) {
 	}
 }
 
+// GetHostNetH godoc
+// @Summary Get network
+// @Description	Get host network information.
+// @Tags Host Information
+// @Produce	json
+// @Success	200 {object} lib_model.HostNet "host network info"
+// @Failure	500 {string} string "error message"
+// @Router /host-info/network [get]
 func GetHostNetH(a lib.Api) (string, string, gin.HandlerFunc) {
 	return http.MethodGet, path.Join(lib_model.HostInfoPath, lib_model.HostNetPath), func(gc *gin.Context) {
 		hostNet, err := a.GetHostNet(gc.Request.Context())

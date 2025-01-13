@@ -28,6 +28,14 @@ type deleteBlacklistValQuery struct {
 	Value string `form:"value"`
 }
 
+// GetNetItfBlacklistH godoc
+// @Summary List network interfaces
+// @Description	List blacklisted host network interfaces.
+// @Tags Blacklists
+// @Produce	json
+// @Success	200 {array} string "network interfaces"
+// @Failure	500 {string} string "error message"
+// @Router /blacklists/net-interfaces [get]
 func GetNetItfBlacklistH(a lib.Api) (string, string, gin.HandlerFunc) {
 	return http.MethodGet, path.Join(lib_model.BlacklistsPath, lib_model.NetInterfacesPath), func(gc *gin.Context) {
 		values, err := a.GetNetItfBlacklist(gc.Request.Context())
@@ -39,6 +47,16 @@ func GetNetItfBlacklistH(a lib.Api) (string, string, gin.HandlerFunc) {
 	}
 }
 
+// PostNetItfBlacklistValueH godoc
+// @Summary Add network interface
+// @Description	Add a host network interface to the list.
+// @Tags Blacklists
+// @Accept plain
+// @Param value body string true "interface name"
+// @Success	200
+// @Failure	400 {string} string "error message"
+// @Failure	500 {string} string "error message"
+// @Router /blacklists/net-interfaces [post]
 func PostNetItfBlacklistValueH(a lib.Api) (string, string, gin.HandlerFunc) {
 	return http.MethodPost, path.Join(lib_model.BlacklistsPath, lib_model.NetInterfacesPath), func(gc *gin.Context) {
 		var v string
@@ -56,6 +74,16 @@ func PostNetItfBlacklistValueH(a lib.Api) (string, string, gin.HandlerFunc) {
 	}
 }
 
+// DeleteNetItfBlacklistValueH godoc
+// @Summary Delete network interface
+// @Description	Remove a host network interface from the list.
+// @Tags Blacklists
+// @Param value query string true "interface name"
+// @Success	200
+// @Failure	400 {string} string "error message"
+// @Failure	404 {string} string "error message"
+// @Failure	500 {string} string "error message"
+// @Router /blacklists/net-interfaces [delete]
 func DeleteNetItfBlacklistValueH(a lib.Api) (string, string, gin.HandlerFunc) {
 	return http.MethodDelete, path.Join(lib_model.BlacklistsPath, lib_model.NetInterfacesPath), func(gc *gin.Context) {
 		query := deleteBlacklistValQuery{}
@@ -72,6 +100,14 @@ func DeleteNetItfBlacklistValueH(a lib.Api) (string, string, gin.HandlerFunc) {
 	}
 }
 
+// GetNetRngBlacklistH godoc
+// @Summary List network ranges
+// @Description	List blacklisted network ranges.
+// @Tags Blacklists
+// @Produce	json
+// @Success	200 {array} string "network rages"
+// @Failure	500 {string} string "error message"
+// @Router /blacklists/net-ranges [get]
 func GetNetRngBlacklistH(a lib.Api) (string, string, gin.HandlerFunc) {
 	return http.MethodGet, path.Join(lib_model.BlacklistsPath, lib_model.NetRangesPath), func(gc *gin.Context) {
 		values, err := a.GetNetRngBlacklist(gc.Request.Context())
@@ -83,6 +119,16 @@ func GetNetRngBlacklistH(a lib.Api) (string, string, gin.HandlerFunc) {
 	}
 }
 
+// PostNetRngBlacklistValueH godoc
+// @Summary Add network range
+// @Description	Add a network range to the list.
+// @Tags Blacklists
+// @Accept plain
+// @Param value body string true "network range in CIDR notation"
+// @Success	200
+// @Failure	400 {string} string "error message"
+// @Failure	500 {string} string "error message"
+// @Router /blacklists/net-ranges [post]
 func PostNetRngBlacklistValueH(a lib.Api) (string, string, gin.HandlerFunc) {
 	return http.MethodPost, path.Join(lib_model.BlacklistsPath, lib_model.NetRangesPath), func(gc *gin.Context) {
 		var v string
@@ -100,6 +146,16 @@ func PostNetRngBlacklistValueH(a lib.Api) (string, string, gin.HandlerFunc) {
 	}
 }
 
+// DeleteNetRngBlacklistValueH godoc
+// @Summary Delete network range
+// @Description	Remove a network range from the list.
+// @Tags Blacklists
+// @Param value query string true "network range"
+// @Success	200
+// @Failure	400 {string} string "error message"
+// @Failure	404 {string} string "error message"
+// @Failure	500 {string} string "error message"
+// @Router /blacklists/net-ranges [delete]
 func DeleteNetRngBlacklistValueH(a lib.Api) (string, string, gin.HandlerFunc) {
 	return http.MethodDelete, path.Join(lib_model.BlacklistsPath, lib_model.NetRangesPath), func(gc *gin.Context) {
 		query := deleteBlacklistValQuery{}
