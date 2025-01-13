@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 InfAI (CC SES)
+ * Copyright 2025 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,32 +14,17 @@
  * limitations under the License.
  */
 
-package http_hdl
+package shared
 
 import (
+	gin_mw "github.com/SENERGY-Platform/gin-middleware"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib"
-	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
-func getHostInfoH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
-		hostInfo, err := a.GetHostInfo(gc.Request.Context())
-		if err != nil {
-			_ = gc.Error(err)
-			return
-		}
-		gc.JSON(http.StatusOK, hostInfo)
-	}
-}
-
-func getHostNetH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
-		hostNet, err := a.GetHostNet(gc.Request.Context())
-		if err != nil {
-			_ = gc.Error(err)
-			return
-		}
-		gc.JSON(http.StatusOK, hostNet)
-	}
+var Routes = gin_mw.Routes[lib.Api]{
+	GetSrvInfoH,
+	GetHostInfoH,
+	GetHostNetH,
+	GetHostResourcesH,
+	GetHostResourceH,
 }

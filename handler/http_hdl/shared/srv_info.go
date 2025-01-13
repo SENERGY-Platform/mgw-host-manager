@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 InfAI (CC SES)
+ * Copyright 2025 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package http_hdl
+package shared
 
 import (
 	"github.com/SENERGY-Platform/mgw-host-manager/lib"
+	lib_model "github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-func getSrvInfoH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
+func GetSrvInfoH(a lib.Api) (string, string, gin.HandlerFunc) {
+	return http.MethodGet, lib_model.SrvInfoPath, func(gc *gin.Context) {
 		gc.JSON(http.StatusOK, a.GetSrvInfo(gc.Request.Context()))
 	}
 }

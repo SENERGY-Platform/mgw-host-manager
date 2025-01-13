@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 InfAI (CC SES)
+ * Copyright 2025 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,43 +14,37 @@
  * limitations under the License.
  */
 
-package http_hdl
+package restricted
 
 import (
 	"github.com/SENERGY-Platform/mgw-host-manager/lib"
-	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+	lib_model "github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
 
-const hostResIdParam = "r"
-
-type hostResourcesQuery struct {
+type mdnsQuery struct {
+	Service    string `form:"service"`
+	Domain     string `form:"domain"`
+	TimeWindow int64  `form:"time_window"`
 }
 
-func getHostResourcesH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
-		query := hostResourcesQuery{}
+func GetMDNSQueryH(a lib.Api) (string, string, gin.HandlerFunc) {
+	return http.MethodGet, lib_model.MDNSDiscoveryPath, func(gc *gin.Context) {
+		var query mdnsQuery
 		if err := gc.ShouldBindQuery(&query); err != nil {
-			_ = gc.Error(model.NewInvalidInputError(err))
+			_ = gc.Error(lib_model.NewInvalidInputError(err))
 			return
 		}
-		resources, err := a.ListHostResources(gc.Request.Context(), model.HostResourceFilter{})
+		if query.TimeWindow == 0 {
+			query.TimeWindow = int64(time.Second)
+		}
+		results, err := a.MDNSQueryService(gc.Request.Context(), query.Service, query.Domain, time.Duration(query.TimeWindow))
 		if err != nil {
 			_ = gc.Error(err)
 			return
 		}
-		gc.JSON(http.StatusOK, resources)
-	}
-}
-
-func getHostResourceH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
-		resource, err := a.GetHostResource(gc.Request.Context(), gc.Param(hostResIdParam))
-		if err != nil {
-			_ = gc.Error(err)
-			return
-		}
-		gc.JSON(http.StatusOK, resource)
+		gc.JSON(http.StatusOK, results)
 	}
 }

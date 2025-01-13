@@ -20,7 +20,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	gin_mw "github.com/SENERGY-Platform/gin-middleware"
 	sb_logger "github.com/SENERGY-Platform/go-service-base/logger"
 	srv_info_hdl "github.com/SENERGY-Platform/go-service-base/srv-info-hdl"
 	sb_util "github.com/SENERGY-Platform/go-service-base/util"
@@ -32,11 +31,9 @@ import (
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/resource_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/resource_hdl/application_hdl"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/resource_hdl/serial_hdl"
-	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+	lib_model "github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"github.com/SENERGY-Platform/mgw-host-manager/manager"
 	"github.com/SENERGY-Platform/mgw-host-manager/util"
-	"github.com/gin-contrib/requestid"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 	"syscall"
@@ -117,27 +114,23 @@ func main() {
 		return
 	}
 
-	hostResourceHdl := resource_hdl.New(map[model.ResourceType]resource_hdl.ResHandler{
-		model.SerialDevice: serial_hdl.New(config.SerialDevicePath),
-		model.Application:  hostAppHdl,
+	hostResourceHdl := resource_hdl.New(map[lib_model.ResourceType]resource_hdl.ResHandler{
+		lib_model.SerialDevice: serial_hdl.New(config.SerialDevicePath),
+		lib_model.Application:  hostAppHdl,
 	})
 	util.Logger.Debugf("resource handlers: %s", sb_util.ToJsonStr(hostResourceHdl.Handlers()))
 
 	hm := manager.New(hostInfoHdl, hostResourceHdl, hostAppHdl, netInterfaceBlacklistHdl, netRangeBlacklistHdl, mdns_hdl.New(), srvInfoHdl)
 
-	gin.SetMode(gin.ReleaseMode)
-	httpHandler := gin.New()
-	staticHeader := map[string]string{
-		model.HeaderApiVer:  srvInfoHdl.GetVersion(),
-		model.HeaderSrvName: srvInfoHdl.GetName(),
+	httpHandler, err := http_hdl.New(hm, map[string]string{
+		lib_model.HeaderApiVer:  srvInfoHdl.GetVersion(),
+		lib_model.HeaderSrvName: srvInfoHdl.GetName(),
+	})
+	if err != nil {
+		util.Logger.Error(err)
+		ec = 1
+		return
 	}
-	httpHandler.Use(gin_mw.StaticHeaderHandler(staticHeader), requestid.New(requestid.WithCustomHeaderStrKey(model.HeaderRequestID)), gin_mw.LoggerHandler(util.Logger, nil, func(gc *gin.Context) string {
-		return requestid.Get(gc)
-	}), gin_mw.ErrorHandler(util.GetStatusCode, ", "), gin.Recovery())
-	httpHandler.UseRawPath = true
-
-	http_hdl.SetRoutes(httpHandler, hm)
-	util.Logger.Debugf("routes: %s", sb_util.ToJsonStr(http_hdl.GetRoutes(httpHandler)))
 
 	listener, err := sb_util.NewUnixListener(config.Socket.Path, os.Getuid(), config.Socket.GroupID, config.Socket.FileMode)
 	if err != nil {

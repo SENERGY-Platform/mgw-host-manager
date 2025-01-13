@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 InfAI (CC SES)
+ * Copyright 2025 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package http_hdl
+package standard
 
 import (
 	"github.com/SENERGY-Platform/mgw-host-manager/lib"
-	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+	lib_model "github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"path"
 )
 
-const hostAppIdParam = "a"
-
-func getHostApplicationsH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
+func GetHostApplicationsH(a lib.Api) (string, string, gin.HandlerFunc) {
+	return http.MethodGet, lib_model.HostAppsPath, func(gc *gin.Context) {
 		apps, err := a.ListHostApplications(gc.Request.Context())
 		if err != nil {
 			_ = gc.Error(err)
@@ -36,12 +35,12 @@ func getHostApplicationsH(a lib.Api) gin.HandlerFunc {
 	}
 }
 
-func postHostApplicationH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
-		var app model.HostApplicationBase
+func PostHostApplicationH(a lib.Api) (string, string, gin.HandlerFunc) {
+	return http.MethodPost, lib_model.HostAppsPath, func(gc *gin.Context) {
+		var app lib_model.HostApplicationBase
 		err := gc.ShouldBindJSON(&app)
 		if err != nil {
-			_ = gc.Error(model.NewInvalidInputError(err))
+			_ = gc.Error(lib_model.NewInvalidInputError(err))
 			return
 		}
 		id, err := a.AddHostApplication(gc.Request.Context(), app)
@@ -53,9 +52,9 @@ func postHostApplicationH(a lib.Api) gin.HandlerFunc {
 	}
 }
 
-func deleteHostApplicationH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
-		err := a.RemoveHostApplication(gc.Request.Context(), gc.Param(hostAppIdParam))
+func DeleteHostApplicationH(a lib.Api) (string, string, gin.HandlerFunc) {
+	return http.MethodDelete, path.Join(lib_model.HostAppsPath, ":id"), func(gc *gin.Context) {
+		err := a.RemoveHostApplication(gc.Request.Context(), gc.Param("id"))
 		if err != nil {
 			_ = gc.Error(err)
 			return

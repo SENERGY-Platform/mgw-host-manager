@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 InfAI (CC SES)
+ * Copyright 2025 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package http_hdl
+package standard
 
 import (
 	"github.com/SENERGY-Platform/mgw-host-manager/lib"
-	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+	lib_model "github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"path"
 )
 
 type deleteBlacklistValQuery struct {
 	Value string `form:"value"`
 }
 
-func getNetItfBlacklistH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
+func GetNetItfBlacklistH(a lib.Api) (string, string, gin.HandlerFunc) {
+	return http.MethodGet, path.Join(lib_model.BlacklistsPath, lib_model.NetInterfacesPath), func(gc *gin.Context) {
 		values, err := a.GetNetItfBlacklist(gc.Request.Context())
 		if err != nil {
 			_ = gc.Error(err)
@@ -38,12 +39,12 @@ func getNetItfBlacklistH(a lib.Api) gin.HandlerFunc {
 	}
 }
 
-func postNetItfBlacklistValueH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
+func PostNetItfBlacklistValueH(a lib.Api) (string, string, gin.HandlerFunc) {
+	return http.MethodPost, path.Join(lib_model.BlacklistsPath, lib_model.NetInterfacesPath), func(gc *gin.Context) {
 		var v string
 		err := gc.ShouldBindJSON(&v)
 		if err != nil {
-			_ = gc.Error(model.NewInvalidInputError(err))
+			_ = gc.Error(lib_model.NewInvalidInputError(err))
 			return
 		}
 		err = a.NetItfBlacklistAdd(gc.Request.Context(), v)
@@ -55,11 +56,11 @@ func postNetItfBlacklistValueH(a lib.Api) gin.HandlerFunc {
 	}
 }
 
-func deleteNetItfBlacklistValueH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
+func DeleteNetItfBlacklistValueH(a lib.Api) (string, string, gin.HandlerFunc) {
+	return http.MethodDelete, path.Join(lib_model.BlacklistsPath, lib_model.NetInterfacesPath), func(gc *gin.Context) {
 		query := deleteBlacklistValQuery{}
 		if err := gc.ShouldBindQuery(&query); err != nil {
-			_ = gc.Error(model.NewInvalidInputError(err))
+			_ = gc.Error(lib_model.NewInvalidInputError(err))
 			return
 		}
 		err := a.NetItfBlacklistRemove(gc.Request.Context(), query.Value)
@@ -71,8 +72,8 @@ func deleteNetItfBlacklistValueH(a lib.Api) gin.HandlerFunc {
 	}
 }
 
-func getNetRngBlacklistH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
+func GetNetRngBlacklistH(a lib.Api) (string, string, gin.HandlerFunc) {
+	return http.MethodGet, path.Join(lib_model.BlacklistsPath, lib_model.NetRangesPath), func(gc *gin.Context) {
 		values, err := a.GetNetRngBlacklist(gc.Request.Context())
 		if err != nil {
 			_ = gc.Error(err)
@@ -82,12 +83,12 @@ func getNetRngBlacklistH(a lib.Api) gin.HandlerFunc {
 	}
 }
 
-func postNetRngBlacklistValueH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
+func PostNetRngBlacklistValueH(a lib.Api) (string, string, gin.HandlerFunc) {
+	return http.MethodPost, path.Join(lib_model.BlacklistsPath, lib_model.NetRangesPath), func(gc *gin.Context) {
 		var v string
 		err := gc.ShouldBindJSON(&v)
 		if err != nil {
-			_ = gc.Error(model.NewInvalidInputError(err))
+			_ = gc.Error(lib_model.NewInvalidInputError(err))
 			return
 		}
 		err = a.NetRngBlacklistAdd(gc.Request.Context(), v)
@@ -99,11 +100,11 @@ func postNetRngBlacklistValueH(a lib.Api) gin.HandlerFunc {
 	}
 }
 
-func deleteNetRngBlacklistValueH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
+func DeleteNetRngBlacklistValueH(a lib.Api) (string, string, gin.HandlerFunc) {
+	return http.MethodDelete, path.Join(lib_model.BlacklistsPath, lib_model.NetRangesPath), func(gc *gin.Context) {
 		query := deleteBlacklistValQuery{}
 		if err := gc.ShouldBindQuery(&query); err != nil {
-			_ = gc.Error(model.NewInvalidInputError(err))
+			_ = gc.Error(lib_model.NewInvalidInputError(err))
 			return
 		}
 		err := a.NetRngBlacklistRemove(gc.Request.Context(), query.Value)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 InfAI (CC SES)
+ * Copyright 2025 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,34 @@
  * limitations under the License.
  */
 
-package http_hdl
+package shared
 
 import (
 	"github.com/SENERGY-Platform/mgw-host-manager/lib"
-	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+	lib_model "github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"time"
+	"path"
 )
 
-type mdnsQuery struct {
-	Service    string `form:"service"`
-	Domain     string `form:"domain"`
-	TimeWindow int64  `form:"time_window"`
-}
-
-func getMDNSQueryH(a lib.Api) gin.HandlerFunc {
-	return func(gc *gin.Context) {
-		var query mdnsQuery
-		if err := gc.ShouldBindQuery(&query); err != nil {
-			_ = gc.Error(model.NewInvalidInputError(err))
-			return
-		}
-		if query.TimeWindow == 0 {
-			query.TimeWindow = int64(time.Second)
-		}
-		results, err := a.MDNSQueryService(gc.Request.Context(), query.Service, query.Domain, time.Duration(query.TimeWindow))
+func GetHostInfoH(a lib.Api) (string, string, gin.HandlerFunc) {
+	return http.MethodGet, lib_model.HostInfoPath, func(gc *gin.Context) {
+		hostInfo, err := a.GetHostInfo(gc.Request.Context())
 		if err != nil {
 			_ = gc.Error(err)
 			return
 		}
-		gc.JSON(http.StatusOK, results)
+		gc.JSON(http.StatusOK, hostInfo)
+	}
+}
+
+func GetHostNetH(a lib.Api) (string, string, gin.HandlerFunc) {
+	return http.MethodGet, path.Join(lib_model.HostInfoPath, lib_model.HostNetPath), func(gc *gin.Context) {
+		hostNet, err := a.GetHostNet(gc.Request.Context())
+		if err != nil {
+			_ = gc.Error(err)
+			return
+		}
+		gc.JSON(http.StatusOK, hostNet)
 	}
 }
