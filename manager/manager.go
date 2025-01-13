@@ -20,7 +20,7 @@ import (
 	"context"
 	"github.com/SENERGY-Platform/go-service-base/srv-info-hdl"
 	srv_info_lib "github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib"
-	"github.com/SENERGY-Platform/mgw-host-manager/lib/model"
+	lib_model "github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"time"
 )
 
@@ -46,37 +46,37 @@ func New(hostInfoHandler HostInfoHandler, hostResourceHandler HostResourceHandle
 	}
 }
 
-func (m *Manager) GetHostInfo(ctx context.Context) (model.HostInfo, error) {
+func (m *Manager) GetHostInfo(ctx context.Context) (lib_model.HostInfo, error) {
 	netInfo, err := m.hostInfoHdl.GetNet(ctx)
 	if err != nil {
-		return model.HostInfo{}, err
+		return lib_model.HostInfo{}, err
 	}
-	return model.HostInfo{
+	return lib_model.HostInfo{
 		Network: netInfo,
 	}, nil
 }
 
-func (m *Manager) GetHostNet(ctx context.Context) (model.HostNet, error) {
+func (m *Manager) GetHostNet(ctx context.Context) (lib_model.HostNet, error) {
 	netInfo, err := m.hostInfoHdl.GetNet(ctx)
 	if err != nil {
-		return model.HostNet{}, err
+		return lib_model.HostNet{}, err
 	}
 	return netInfo, nil
 }
 
-func (m *Manager) ListHostResources(ctx context.Context, filter model.HostResourceFilter) ([]model.HostResource, error) {
+func (m *Manager) ListHostResources(ctx context.Context, filter lib_model.HostResourceFilter) ([]lib_model.HostResource, error) {
 	return m.hostResourceHdl.List(ctx, filter)
 }
 
-func (m *Manager) GetHostResource(ctx context.Context, rID string) (model.HostResource, error) {
+func (m *Manager) GetHostResource(ctx context.Context, rID string) (lib_model.HostResource, error) {
 	return m.hostResourceHdl.Get(ctx, rID)
 }
 
-func (m *Manager) ListHostApplications(ctx context.Context) ([]model.HostApplication, error) {
+func (m *Manager) ListHostApplications(ctx context.Context) ([]lib_model.HostApplication, error) {
 	return m.hostAppHdl.List(ctx)
 }
 
-func (m *Manager) AddHostApplication(ctx context.Context, appResBase model.HostApplicationBase) (string, error) {
+func (m *Manager) AddHostApplication(ctx context.Context, appResBase lib_model.HostApplicationBase) (string, error) {
 	return m.hostAppHdl.Add(ctx, appResBase)
 }
 
@@ -108,7 +108,7 @@ func (m *Manager) NetRngBlacklistRemove(ctx context.Context, v string) error {
 	return m.netRngBlacklistHdl.Remove(ctx, v)
 }
 
-func (m *Manager) MDNSQueryService(ctx context.Context, service, domain string, window time.Duration) ([]model.MDNSEntry, error) {
+func (m *Manager) MDNSQueryService(ctx context.Context, service, domain string, window time.Duration) ([]lib_model.MDNSEntry, error) {
 	return m.mdnsDiscoveryHdl.Query(ctx, service, domain, window)
 }
 
