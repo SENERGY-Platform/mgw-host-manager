@@ -32,9 +32,9 @@ var routes = gin_mw.Routes[lib.Api]{
 }
 
 // SetRoutes
-// @title Host Manager API
-// @version 0.8.2
-// @description Provides access to host services.
+// @title Host Manager restricted API
+// @version 1.3.0
+// @description Provides access to selected host functions.
 // @license.name Apache-2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 // @BasePath /restricted
