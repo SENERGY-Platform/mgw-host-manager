@@ -1,0 +1,252 @@
+basePath: /restricted
+definitions:
+  lib.MemStats:
+    properties:
+      alloc:
+        type: integer
+      alloc_total:
+        type: integer
+      gc_cycles:
+        type: integer
+      sys_total:
+        type: integer
+    type: object
+  lib.SrvInfo:
+    properties:
+      mem_stats:
+        $ref: '#/definitions/lib.MemStats'
+      name:
+        type: string
+      up_time:
+        $ref: '#/definitions/time.Duration'
+      version:
+        type: string
+    type: object
+  model.HostInfo:
+    properties:
+      hardware: {}
+      network:
+        $ref: '#/definitions/model.HostNet'
+      os: {}
+    type: object
+  model.HostNet:
+    properties:
+      hostname:
+        type: string
+      interfaces:
+        items:
+          $ref: '#/definitions/model.NetInterface'
+        type: array
+    type: object
+  model.HostResource:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      path:
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+      type:
+        $ref: '#/definitions/model.ResourceType'
+    type: object
+  model.MDNSEntry:
+    properties:
+      domain:
+        type: string
+      expiry:
+        type: string
+      hostname:
+        type: string
+      ipv4_addr:
+        type: string
+      name:
+        type: string
+      port:
+        type: integer
+      subtypes:
+        items:
+          type: string
+        type: array
+      txt_records:
+        items:
+          type: string
+        type: array
+      type:
+        type: string
+    type: object
+  model.NetInterface:
+    properties:
+      ipv4_addr:
+        type: string
+      ipv4_mask:
+        type: string
+      ipv4_net:
+        type: string
+      name:
+        type: string
+    type: object
+  model.ResourceType:
+    enum:
+    - serial
+    - app
+    type: string
+    x-enum-varnames:
+    - SerialDevice
+    - Application
+  time.Duration:
+    enum:
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    type: integer
+    x-enum-varnames:
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+info:
+  contact: {}
+  description: Provides access to selected host functions.
+  license:
+    name: Apache-2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Host Manager restricted API
+  version: 1.3.0
+paths:
+  /endpoints:
+    get:
+      description: Query MDNS devices on attached networks.
+      parameters:
+      - description: 'MDNS service string (e.g.: ''_services._dns-sd._udp'' for all
+          available services)'
+        in: query
+        name: service
+        required: true
+        type: string
+      - description: limit the query to a domain
+        in: query
+        name: domain
+        type: string
+      - description: set the maximum duration for the query (defaults to 1s)
+        in: query
+        name: time_window
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: list of services
+          schema:
+            items:
+              $ref: '#/definitions/model.MDNSEntry'
+            type: array
+        "400":
+          description: error message
+          schema:
+            type: string
+        "500":
+          description: error message
+          schema:
+            type: string
+      summary: MDNS query
+      tags:
+      - MDNS
+  /host-info:
+    get:
+      description: Get host information.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: host info
+          schema:
+            $ref: '#/definitions/model.HostInfo'
+        "500":
+          description: error message
+          schema:
+            type: string
+      summary: Get all
+      tags:
+      - Host Information
+  /host-info/network:
+    get:
+      description: Get host network information.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: host network info
+          schema:
+            $ref: '#/definitions/model.HostNet'
+        "500":
+          description: error message
+          schema:
+            type: string
+      summary: Get network
+      tags:
+      - Host Information
+  /host-resources:
+    get:
+      description: List host resources like application sockets or serial adapters.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: host resources
+          schema:
+            items:
+              $ref: '#/definitions/model.HostResource'
+            type: array
+        "500":
+          description: error message
+          schema:
+            type: string
+      summary: List resources
+      tags:
+      - Host Resources
+  /host-resources/{id}:
+    get:
+      description: Get a host resource.
+      parameters:
+      - description: resource id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: host resources
+          schema:
+            $ref: '#/definitions/model.HostResource'
+        "500":
+          description: error message
+          schema:
+            type: string
+      summary: Get resource
+      tags:
+      - Host Resources
+  /info:
+    get:
+      description: Get basic service and runtime information.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: info
+          schema:
+            $ref: '#/definitions/lib.SrvInfo'
+        "500":
+          description: error message
+          schema:
+            type: string
+      summary: Get stats
+      tags:
+      - Service Information
+swagger: "2.0"
