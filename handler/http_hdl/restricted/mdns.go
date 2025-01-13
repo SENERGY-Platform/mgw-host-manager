@@ -41,7 +41,7 @@ type mdnsQuery struct {
 // @Success	200 {array} lib_model.MDNSEntry "list of services"
 // @Failure	400 {string} string "error message"
 // @Failure	500 {string} string "error message"
-// @Router /endpoints [get]
+// @Router /mdns-discovery [get]
 func GetMDNSQueryH(a lib.Api) (string, string, gin.HandlerFunc) {
 	return http.MethodGet, lib_model.MDNSDiscoveryPath, func(gc *gin.Context) {
 		var query mdnsQuery
