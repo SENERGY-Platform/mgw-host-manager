@@ -19,6 +19,7 @@ package standard
 import (
 	gin_mw "github.com/SENERGY-Platform/gin-middleware"
 	"github.com/SENERGY-Platform/mgw-host-manager/handler/http_hdl/shared"
+	_ "github.com/SENERGY-Platform/mgw-host-manager/handler/http_hdl/swagger_docs"
 	"github.com/SENERGY-Platform/mgw-host-manager/lib"
 	"github.com/SENERGY-Platform/mgw-host-manager/util"
 	"github.com/gin-gonic/gin"
