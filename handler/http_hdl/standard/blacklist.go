@@ -20,6 +20,7 @@ import (
 	"github.com/SENERGY-Platform/mgw-host-manager/lib"
 	lib_model "github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"github.com/gin-gonic/gin"
+	"io"
 	"net/http"
 	"path"
 )
@@ -59,13 +60,13 @@ func GetNetItfBlacklistH(a lib.Api) (string, string, gin.HandlerFunc) {
 // @Router /blacklists/net-interfaces [post]
 func PostNetItfBlacklistValueH(a lib.Api) (string, string, gin.HandlerFunc) {
 	return http.MethodPost, path.Join(lib_model.BlacklistsPath, lib_model.NetInterfacesPath), func(gc *gin.Context) {
-		var v string
-		err := gc.ShouldBindJSON(&v)
+		defer gc.Request.Body.Close()
+		v, err := io.ReadAll(gc.Request.Body)
 		if err != nil {
 			_ = gc.Error(lib_model.NewInvalidInputError(err))
 			return
 		}
-		err = a.NetItfBlacklistAdd(gc.Request.Context(), v)
+		err = a.NetItfBlacklistAdd(gc.Request.Context(), string(v))
 		if err != nil {
 			_ = gc.Error(err)
 			return
@@ -131,13 +132,17 @@ func GetNetRngBlacklistH(a lib.Api) (string, string, gin.HandlerFunc) {
 // @Router /blacklists/net-ranges [post]
 func PostNetRngBlacklistValueH(a lib.Api) (string, string, gin.HandlerFunc) {
 	return http.MethodPost, path.Join(lib_model.BlacklistsPath, lib_model.NetRangesPath), func(gc *gin.Context) {
-		var v string
-		err := gc.ShouldBindJSON(&v)
+		defer gc.Request.Body.Close()
+		v, err := io.ReadAll(gc.Request.Body)
 		if err != nil {
 			_ = gc.Error(lib_model.NewInvalidInputError(err))
 			return
 		}
-		err = a.NetRngBlacklistAdd(gc.Request.Context(), v)
+		if err != nil {
+			_ = gc.Error(lib_model.NewInvalidInputError(err))
+			return
+		}
+		err = a.NetRngBlacklistAdd(gc.Request.Context(), string(v))
 		if err != nil {
 			_ = gc.Error(err)
 			return
