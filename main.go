@@ -86,6 +86,11 @@ func main() {
 		return
 	}
 	netInterfaceBlacklistHdl.SetValidationFunc(info_hdl.ValidateNetItfName)
+	if err = netInterfaceBlacklistHdl.Init(); err != nil {
+		util.Logger.Error(err)
+		ec = 1
+		return
+	}
 
 	netRangeBlacklistHdl, err := blacklist_hdl.New(config.Blacklist.NetRangeListPath)
 	if err != nil {
@@ -94,6 +99,11 @@ func main() {
 		return
 	}
 	netRangeBlacklistHdl.SetValidationFunc(info_hdl.ValidateCIDR)
+	if err = netRangeBlacklistHdl.Init(); err != nil {
+		util.Logger.Error(err)
+		ec = 1
+		return
+	}
 
 	hostInfoHdl, err := info_hdl.New(config.Blacklist.NetInterfaceList, config.Blacklist.NetRangeList, netInterfaceBlacklistHdl, netRangeBlacklistHdl)
 	if err != nil {
