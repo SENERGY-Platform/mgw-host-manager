@@ -45,7 +45,7 @@ func Write(v any, p string, backup bool) error {
 			}
 		}
 	}
-	file, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE, 0666)
+	file, err := os.OpenFile(p, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		return err
 	}
