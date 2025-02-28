@@ -18,8 +18,8 @@ package manager
 
 import (
 	"context"
-	"github.com/SENERGY-Platform/go-service-base/srv-info-hdl"
-	srv_info_lib "github.com/SENERGY-Platform/go-service-base/srv-info-hdl/lib"
+	"github.com/SENERGY-Platform/mgw-go-service-base/srv-info-hdl"
+	srv_info_lib "github.com/SENERGY-Platform/mgw-go-service-base/srv-info-hdl/lib"
 	lib_model "github.com/SENERGY-Platform/mgw-host-manager/lib/model"
 	"time"
 )
