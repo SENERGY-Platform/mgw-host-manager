@@ -31,7 +31,7 @@ import (
 func TestHandler_Init(t *testing.T) {
 	tmpFilePath := path.Join(t.TempDir(), "test.json")
 	t.Run("file does not exist", func(t *testing.T) {
-		h, err := New(tmpFilePath, "")
+		h, err := New(tmpFilePath, nil)
 		if err != nil {
 			t.Error(err)
 		}
@@ -64,7 +64,7 @@ func TestHandler_Init(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		h, err := New(tmpFilePath, "")
+		h, err := New(tmpFilePath, nil)
 		if err != nil {
 			t.Error(err)
 		}
@@ -76,7 +76,7 @@ func TestHandler_Init(t *testing.T) {
 		}
 	})
 	t.Run("file exists", func(t *testing.T) {
-		h, err := New(tmpFilePath, "")
+		h, err := New(tmpFilePath, nil)
 		if err != nil {
 			t.Error(err)
 		}
@@ -93,7 +93,7 @@ func TestHandler_Init(t *testing.T) {
 			t.Fatal(err)
 		}
 		defer f.Close()
-		h, err := New(tmpFilePath, "")
+		h, err := New(tmpFilePath, nil)
 		if err != nil {
 			t.Error(err)
 		}
@@ -104,7 +104,7 @@ func TestHandler_Init(t *testing.T) {
 }
 
 func TestHandler_List(t *testing.T) {
-	h, err := New(path.Join(t.TempDir(), "test.json"), "")
+	h, err := New(path.Join(t.TempDir(), "test.json"), nil)
 	if err != nil {
 		t.Error(err)
 	}
@@ -142,7 +142,7 @@ func TestHandler_List(t *testing.T) {
 }
 
 func TestHandler_Add(t *testing.T) {
-	h, err := New(path.Join(t.TempDir(), "test.json"), "")
+	h, err := New(path.Join(t.TempDir(), "test.json"), nil)
 	if err != nil {
 		t.Error(err)
 	}
@@ -170,7 +170,7 @@ func TestHandler_Add(t *testing.T) {
 }
 
 func TestHandler_Remove(t *testing.T) {
-	h, err := New(path.Join(t.TempDir(), "test.json"), "")
+	h, err := New(path.Join(t.TempDir(), "test.json"), nil)
 	if err != nil {
 		t.Error(err)
 	}
@@ -195,7 +195,7 @@ func TestHandler_Remove(t *testing.T) {
 }
 
 func TestHandler_Get(t *testing.T) {
-	h, err := New(path.Join(t.TempDir(), "test.json"), "")
+	h, err := New(path.Join(t.TempDir(), "test.json"), nil)
 	if err != nil {
 		t.Error(err)
 	}
